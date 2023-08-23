@@ -1,0 +1,69 @@
+<div class="sidebar">
+    <div class="flexCenter">
+        <i class="fas fa-heart-pulse" title="Health" style="font-size: 24px; color: green;"></i>
+        &nbsp&nbsp<input title="health.value" class="smallInput" style="font-size: 18px;" type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number" />
+        &nbsp/&nbsp<input title="health.max" class="smallInput" style="font-size: 18px;" type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number" /> 
+    </div>
+    {{#if system.shield.isUsed}}
+    <div class="flexCenter">
+        <i class="fas fa-shield-halved" title="Shield" style="font-size: 24px; color: blue;"></i>
+        &nbsp&nbsp<input title="shield.value" class="smallInput" style="font-size: 18px;" type="text" name="system.shield.value" value="{{system.shield.value}}" data-dtype="Number" />
+        &nbsp/&nbsp<input title="shield.max" class="smallInput" style="font-size: 18px;" type="text" name="system.shield.max" value="{{system.shield.max}}" data-dtype="Number" /> 
+    </div>
+    {{/if}}
+    {{#if system.power.isUsed}}
+    <div class="flexCenter">
+        <i class="fas fa-bolt" title="Power" style="font-size: 24px; color: yellow;"></i>
+        &nbsp&nbsp&nbsp<input title="power.value" class="smallInput" style="font-size: 18px;" type="text" name="system.power.value" value="{{system.power.value}}" data-dtype="Number" />
+        &nbsp/&nbsp<input title="power.max" class="smallInput" style="font-size: 18px;" type="text" name="system.power.max" value="{{system.power.max}}" data-dtype="Number" /> 
+    </div>
+    {{/if}}
+    {{#if system.heat.isUsed}}
+    <div class="flexCenter">
+        <i class="fas fa-fire" title="Heat" style="font-size: 24px; color: darkred;"></i>
+        &nbsp&nbsp&nbsp<input title="heat.value" class="smallInput" style="font-size: 18px;" type="text" name="system.heat.value" value="{{system.heat.value}}" data-dtype="Number" />
+        &nbsp/&nbsp<input title="heat.max" class="smallInput" style="font-size: 18px;" type="text" name="system.heat.max" value="{{system.heat.max}}" data-dtype="Number" /> 
+    </div>
+    {{/if}}
+    <br />
+    <div>
+        Aim : <input title="system.aim" class="smallInput" style="font-size: 18px;" type="text" name="system.aim" value="{{system.aim}}" data-dtype="Number" />
+        Melee : <input title="system.melee" class="smallInput" style="font-size: 18px;" type="text" name="system.melee" value="{{system.melee}}" data-dtype="Number" />
+    </div>
+    <div>
+        Act. : <input title="system.actions" class="smallInput" style="font-size: 18px;" type="text" name="system.actions" value="{{system.actions}}" data-dtype="Number" />
+        Speed : <input title="system.speed" class="smallInput" style="font-size: 18px;" type="text" name="system.speed" value="{{system.speed}}" data-dtype="Number" />
+    </div>
+    <br />
+        <table class="item-list">
+        {{#each effects as |section sid|}}
+        <tr data-effect-type="{{section.type}}">
+            <th>{{section.label}}</th>
+            <th class="item-controls effect-controls">
+                <a class="effect-control" data-action="create" title="Add Effect">
+                <i class="fas fa-plus"></i>
+                </a>
+            </th>
+        </tr>
+        {{#each section.effects as |effect|}}
+        <tr class="item" data-effect-id="{{effect.id}}">
+            <td class="effect-name flexCenter">
+            <img width="24" height="24" src="{{effect.icon}}"/>
+            &nbsp{{effect.label}}
+            </td>
+            <td class="item-controls effect-controls">
+                <a class="effect-control" data-action="toggle" title="Toggle Effect">
+                <i class="fas {{#if effect.disabled}}fa-check{{else}}fa-times{{/if}}"></i>
+                </a>
+                <a class="effect-control" data-action="edit" title="Edit Effect">
+                <i class="fas fa-edit"></i>
+                </a>
+                <a class="effect-control" data-action="delete" title="Delete Effect">
+                <i class="fas fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+        {{/each}}
+        {{/each}}
+        </table>
+</div>

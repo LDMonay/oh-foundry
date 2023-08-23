@@ -1,0 +1,19 @@
+<div class="chatMessage">
+    <div class="fitToContent">
+        <div class="floatLeft"><img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="32" width="32"/></div>&nbsp&nbsp<h2 class="floatRight">{{item.name}}</h2> </div>
+    {{#if item.system.benefitsDescription}}
+    <div><i>{{item.system.benefitsDescription}}</i></div>
+    <hr />
+    {{/if}}
+    {{#if item.system.description}}
+    <div>{{item.system.description}}</div>
+    <hr />
+    {{/if}}
+    <table class="center">
+        <tr>
+    {{#if item.system.armor}}
+        <td>Armor {{item.system.armor}}</td>
+    {{/if}}
+        </tr>
+    </table>
+</div>

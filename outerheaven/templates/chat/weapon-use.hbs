@@ -1,0 +1,45 @@
+<div class="chatMessage">
+    <div class="floatLeft"><img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="32" width="32"/></div>&nbsp&nbsp<h2 class="floatRight">{{item.name}}</h2> </div>
+    <table class="center">
+        <tr>
+            <th>Attack</th>
+            <th>[[{{atkRoll.formula}}]] {{#if (eq item.system.weaponType "ranged")}}vs Profile{{/if}} {{#if (eq item.system.weaponType "melee")}}vs Defense{{/if}}</th>
+        </tr>
+        <tr>
+            <th>Damage</th>
+            <th>[[{{dmgRoll.formula}}]] {{item.system.damageType}}</th>
+        </tr>
+        <tr>
+            <td>{{#if (eq item.system.weaponType "ranged")}}Shots{{/if}}{{#if (eq item.system.weaponType "melee")}}Attacks{{/if}}</td>
+            <td>{{item.system.numberOfAttacks}} / Total AP [[{{item.system.armorPenetration}} * {{item.system.numberOfAttacks}}]]</td>
+        </tr>
+        {{#if (eq item.system.weaponType "ranged")}}
+        <tr>
+            <td>Range</td>
+            <td>{{item.system.range}} squares</td>
+        </tr>
+        {{/if}}
+        {{#if item.system.capacity.value}}
+        <tr>
+            <td>Ammo</td>
+            <td>{{item.system.capacity.value}} {{#if item.system.capacity.max}}/ {{item.system.capacity.max}}{{/if}}</td>
+        </tr>
+        {{/if}}
+        {{#if (eq item.system.capacity.value 0)}}
+        {{#if item.system.capacity.max}}
+        <tr>
+            <td>Ammo</td>
+            <td>EMPTY !</td>
+        </tr>
+        {{/if}}
+        {{/if}}
+    </table>
+    <table class="center">
+        <tr>
+            <th>Properties</th>
+        </tr>
+        <tr>
+            <td>{{item.system.properties}}</td>
+        </tr>
+    </table>
+</div>

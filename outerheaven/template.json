@@ -1,0 +1,101 @@
+{
+    "Actor": {
+        "types": ["unit"],
+        "unit": {
+            "health": {
+                "value": 0,
+                "max": 0
+            },
+            "shield": {
+                "value": 0,
+                "max": 0,
+                "isUsed": false
+            },
+            "power": {
+                "value": 0,
+                "max": 0,
+                "isUsed": false
+            },
+            "heat": {
+                "value": 0,
+                "max": 0,
+                "isUsed": false
+            },
+            "speed": 0,
+            "profile": {
+                "base" : 6,
+                "stanceBonus" : 0,
+                "miscBonus" : 0
+            },
+            "defense": {
+                "base" : 11,
+                "stanceBonus" : 0,
+                "miscBonus" : 0
+            },
+            "saves": {
+                "grit": null,
+                "awareness": null,
+                "morale": null
+            },
+            "actions": 2,
+            "aim": 0,
+            "melee": 0,
+            "baseUnitPoints": null,
+            "baseUnitPointsIgnore": false,
+            "maxPoints": null,
+            "description": "",
+            "notes": ""
+        }
+    },
+    "Item": {
+        "types":["weapon","equipment","ability","skill","armor"],
+        "templates":{
+            "itemDescription":{
+                "description": "",
+                "tags": ""
+            },
+            "points":{
+                "ignoreCost": false,
+                "pointCost": 0
+            },
+            "usable":{
+                "actionsToUse": null,
+                "powerCost": "",
+                "capacity":
+                {
+                    "value": "",
+                    "max": ""
+                }
+            }
+        },
+        "weapon": {
+            "templates": ["itemDescription", "points", "usable"],
+            "weaponType": "ranged",
+            "damageType": "",
+            "damagePerAttack": "",
+            "numberOfAttacks": 1,
+            "attackBonus": 0,
+            "armorPenetration" : 0,
+            "handedness": "",
+            "properties": "",
+            "range": null
+        },
+        "equipment": {
+            "templates": ["itemDescription", "points", "usable"]
+        },
+        "ability": {
+            "templates": ["itemDescription", "points", "usable"]
+        },
+        "skill": {
+            "templates": ["itemDescription", "points"],
+            "benefitsDescription": ""
+        },
+        "armor": {
+            "templates": ["itemDescription", "points"],
+            "benefitsDescription": "",
+            "armorBonuses" : [
+                {"armorType": "Untyped", "value": 0}
+            ]
+        }
+    }
+}

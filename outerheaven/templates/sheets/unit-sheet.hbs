@@ -1,0 +1,38 @@
+<form class="actor-sheet {{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="64" width="64"/>
+        <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="{{ localize 'Name' }}"/></h1>
+    </header>
+    <div>
+        <div style="width: 30%; float: right; padding-left: 8px">
+            {{> "oh.unit-stats-sidebar"}}
+        </div>
+        <div style="width: 70%;">
+            <div>
+            Use shield : <input class="vCenter" type="checkbox" name="system.shield.isUsed" {{checked system.shield.isUsed}} />
+            Use power : <input class="vCenter" type="checkbox" name="system.power.isUsed" {{checked system.power.isUsed}} />
+            Use heat : <input class="vCenter" type="checkbox" name="system.heat.isUsed" {{checked system.heat.isUsed}} />
+
+            <div class="floatRight">PTS : <input class="smallInput" type="text" name="system.totalPoints" value="{{system.totalPoints}}" data-dtype="Number" disabled/> / <input class="smallInput" type="text" name="system.maxPoints" value="{{system.maxPoints}}" data-dtype="Number" /></div>
+            </div>
+
+            {{> "oh.unit-stats-defense"}}
+
+            {{> "oh.unit-weapons"}}
+
+            {{> "oh.unit-defenses"}}
+
+            {{> "oh.unit-items"}}
+            
+            {{> "oh.unit-abilities"}}
+
+            {{> "oh.unit-skills"}}
+        </div>
+        <div>
+            <p>
+                Base unit cost : <input class="smallInput" type="text" name="system.baseUnitPoints" value="{{system.baseUnitPoints}}" data-dtype="Number" />
+                Ignore cost : <input class="vCenter" type="checkbox" name="system.baseUnitPointsIgnore" {{checked system.baseUnitPointsIgnore}} />
+            </p>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,44 @@
+<table class="center">
+    <tr>
+        <th>Shots</th>
+        <th>Damage per Shot</th>
+        <th>Dmg Type</th>
+        <th>Ammo</th>
+    </tr>
+    <tr>
+        <td><input class="mediumInput" type="text" name="system.numberOfAttacks" value="{{system.numberOfAttacks}}" data-dtype="Number" /></td>
+        <td><input class="mediumInput" type="text" name="system.damagePerAttack" value="{{system.damagePerAttack}}" /></td>
+        <td>
+            <select style="width:100%; text-align:center;" name="system.damageType">
+                {{#select system.damageType}}
+                {{#each config.damageTypes as |name type|}}
+                <option value="{{type}}">{{name}}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </td>
+        <td><input class="smallInput" type="text" name="system.capacity.value" value="{{system.capacity.value}}" data-dtype="Number" /></td>
+    </tr>
+    <tr>
+        <th>Actions To Fire</th>
+        <th>Range</th>
+        <th>Handedness</th>
+        <th>Max Ammo</th>
+    </tr>
+    <tr>
+        <td><input class="mediumInput" type="text" name="system.actionsToUse" value="{{system.actionsToUse}}" data-dtype="Number" /></td>
+        <td><input class="mediumInput" type="text" name="system.range" value="{{system.range}}" data-dtype="Number" /></td>
+        <td><input type="text" name="system.handedness" value="{{system.handedness}}" /></td>
+        <td><input class="smallInput" type="text" name="system.capacity.max" value="{{system.capacity.max}}" data-dtype="Number" /></td>
+    </tr>
+    <tr>
+        <th>Aim Bonus</th>
+        <th colspan="2">Properties</th>
+        <th>AP</th>
+    </tr>
+    <tr>
+        <td><input class="mediumInput" type="text" name="system.attackBonus" value="{{system.attackBonus}}" data-dtype="Number" /></td>
+        <td colspan="2"><input type="text" name="system.properties" value="{{system.properties}}" /></td>
+        <td><input class="smallInput" type="text" name="system.armorPenetration" value="{{system.armorPenetration}}" data-dtype="Number" /></td>
+    </tr>
+</table>
