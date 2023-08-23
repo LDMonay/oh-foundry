@@ -23,15 +23,24 @@ A number of item types :
 
 # Features I WANT to implement (high priority)
 - Finish damage types handling
+- Add a global setting which should allow choosing one of the three ways to handle crits in the system. (Unlimited, Limited, NoCrit)
+- Implement the Limited and NoCrit options to the damage calculation.
 - When shooting a weapon, if a token is targeted, the token's current 'AC' should be displayed in the chat template
 - When shooting a weapon, if a token is targeted, a second damage value taking into account the actor's armor against that weapon should be calculated and displayed.
 - When shooting a weapon, if a token is targeted, the number of range increments over the regular range should be taken into account for the attack calculation.
 - Weapons should have an option to be reloaded to full, which would display a chat template.
+- Actor power should be reduced when using a weapon with power usage.
 - If a token is selected, we should be able to apply damage from an attack to that token (using a button in the chat template ?)
 - Effects should be made into an item type, in order to allow them to be stored in a compendium.
 - A button to open a set of compendiums from the actor sheet.
 
 # Features I would like to implement (lower priority)
+- Items other than weapons can be 'used' (charges and power consumption)
 - An actor or item type used to handle the newly made campaign system (Mostly a simple record sheet, with a few functionalities allowing for passing a week and calculating expenses.)
 - All items types can have embeded effects that apply to the actor.
 - A few measurement Templates
+- Side/Team initative instead of individual token initiative
+- Add a heat generation stat to items which, when used, would increase the actor's Heat value.
+- Add an actor heat dissipation stat which would reduce the actor's current heat value on the start of his turn.
+- Damage over Time effects that trigger on turn start.
+- Vehicle actors that can contain other actors...
