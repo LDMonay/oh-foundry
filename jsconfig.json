@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "module": "es2022",
+        "target": "ES2022",
+        "lib": ["ES2023", "DOM"],
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "allowJs": true,
+        "checkJs": false
+    },
+    "exclude": ["node_modules", "dist"],
+    "include": ["**/*.js", "**/*.mjs", "client", "common"]
+}

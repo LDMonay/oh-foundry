@@ -1,0 +1,43 @@
+{
+    "name": "outerheaven",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "vite",
+        "build": "vite build",
+        "lint": "eslint . --cache",
+        "lint:fix": "eslint . --cache --fix",
+        "format": "prettier --write --cache .",
+        "format:check": "prettier --check --cache .",
+        "prepare": "npx husky install"
+    },
+    "lint-staged": {
+        "*.mjs": "eslint --cache --fix",
+        "*.(json|less|yml|mjs)": "prettier --write"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/LDMonay/oh-foundry.git"
+    },
+    "author": "",
+    "license": "CC0-1.0",
+    "bugs": {
+        "url": "https://github.com/LDMonay/oh-foundry/issues"
+    },
+    "homepage": "https://github.com/LDMonay/oh-foundry#readme",
+    "devDependencies": {
+        "@types/fs-extra": "^11.0.1",
+        "eslint": "^8.47.0",
+        "eslint-config-prettier": "^9.0.0",
+        "fs-extra": "^11.1.1",
+        "husky": "^8.0.3",
+        "less": "^4.2.0",
+        "lint-staged": "^14.0.1",
+        "prettier": "^3.0.2",
+        "terser": "^5.19.2",
+        "vite": "^4.4.9",
+        "vite-plugin-static-copy": "^0.17.0"
+    }
+}

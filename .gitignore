@@ -1,0 +1,24 @@
+# IDE
+.idea/
+.vs/
+.vscode/
+*.code-workspace
+/.vim
+
+# Node Modules
+node_modules/
+
+# Distribution directory
+dist/
+
+# Foundry links
+/common
+/client
+
+# Misc
+/.eslintcache
+stats.html
+.env.local
+/index.html
+/outerheaven.js
+/outerheaven.css

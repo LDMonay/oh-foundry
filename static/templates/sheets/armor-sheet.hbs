@@ -1,0 +1,63 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64" />
+        <h1><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+    </header>
+    <div>
+        <div class="itemSection">
+            <a class="armorBonus-create" title="New"><i class="fas fa-plus"></i> New Armor Bonus</a>
+            <table class="item-list">
+                {{#each system.armorBonuses as |item id|}}
+                    <tr class="item" data-index={{id}}>
+                        <td>
+                            <input
+                                class="mediumInput"
+                                type="text"
+                                name="system.armorBonuses.{{id}}.value"
+                                value="{{item.value}}"
+                                data-dtype="Number"
+                            />
+                            <select name="system.armorBonuses.{{id}}.armorType">
+                                {{selectOptions @root.config.damageTypes selected=item.armorType}}
+                            </select>
+                        </td>
+                        <td>
+                            <a
+                                class="armorBonus-delete"
+                                data-value="{{item.value}}"
+                                data-type="{{item.armorType}}"
+                                title="Delete"
+                            ><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                {{/each}}
+            </table>
+        </div>
+        <div class="itemSection">
+            Benefits
+            <textarea name="system.benefitsDescription">{{system.benefitsDescription}}</textarea>
+        </div>
+        <hr />
+        <div class="itemSection">
+            <textarea name="system.description">{{system.description}}</textarea>
+        </div>
+        <div>
+            <p class="floatLeft">
+                Tags :
+                <input class="mediumInput" type="text" name="system.tags" value="{{system.tags}}" />
+            </p>
+            <p class="floatRight">
+                Point cost :
+                <input
+                    class="smallInput"
+                    type="text"
+                    name="system.pointCost"
+                    value="{{system.pointCost}}"
+                    data-dtype="Number"
+                />
+                Ignore cost :
+                <input class="vCenter" type="checkbox" name="system.ignoreCost" {{checked system.ignoreCost}} />
+            </p>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,34 @@
+<div class="section">
+    <div>
+        <p class="floatLeft"><b><u>Defenses</u></b></p>
+        <p class="floatRight">
+            <a class="item-create" data-type="armor" title="New"><i class="fas fa-plus"></i></a>
+            <a class="item-import" title="Add from compendium"><i class="fas fa-folder-plus"></i></a>
+        </p>
+    </div>
+    {{#if defenses}}
+        <table class="item-list">
+            <tr>
+                <th>Item</th>
+                <th>Armor</th>
+                <th>Benefits</th>
+                <th></th>
+            </tr>
+            {{#each defenses as |item id|}}
+                <tr class="item center" data-item-id="{{item._id}}">
+                    <td class="left"><div class="flexCenter">
+                            <img src="{{item.img}}" title="{{item.name}}" width="24" height="24" />
+                            <div style="margin-left: 5px"><a class="item-display">{{item.name}}</a></div></div></td>
+                    <td>{{#if item.system.armor}}{{item.system.armor}}{{/if}}</td>
+                    <!-- TODO: How to display armorBonuses? -->
+                    <td>{{#if item.system.benefitsDescription}}
+                            <p class="descMaxLength">{{item.system.benefitsDescription}}</p>{{/if}}</td>
+                    <td class="floatRight">
+                        <a class="item-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                        <a class="item-delete" title="Delete"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+            {{/each}}
+        </table>
+    {{/if}}
+</div>
