@@ -1,0 +1,29 @@
+{
+    "id": "outerheaven",
+    "title": "Outer Heaven",
+    "version": "0.01",
+    "description": "Homebrewed system made for modern combat and squad fights",
+    "authors": [
+        {
+            "name": "Mantis"
+        }
+    ],
+    "compatibility": {
+        "minimum": "10",
+        "verified": "10",
+        "maximum": "11"
+    },
+    "esmodules": ["outerheaven.mjs"],
+    "styles": ["outerheaven.css"],
+    "packs": [],
+    "languages": [{ "lang": "en", "path": "lang/en.json" }],
+    "gridDistance": 1,
+    "gridUnits": "sq",
+    "primaryTokenAttribute": "health",
+    "secondaryTokenAttribute": "power",
+    "flags": {
+        "hotReload": {
+            "extensions": ["hbs", "json"]
+        }
+    }
+}

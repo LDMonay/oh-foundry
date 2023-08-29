@@ -1,0 +1,8 @@
+{
+    "Actor": {
+        "types": ["unit"]
+    },
+    "Item": {
+        "types": ["weapon", "equipment", "ability", "skill", "armor"]
+    }
+}
