@@ -18,7 +18,7 @@
                                 data-dtype="Number"
                             />
                             <select name="system.armorBonuses.{{id}}.armorType">
-                                {{selectOptions @root.config.damageTypes selected=item.armorType}}
+                                {{selectOptions @root.config.armorTypes selected=item.armorType localize=true}}
                             </select>
                         </td>
                         <td>

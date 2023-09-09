@@ -1,0 +1,114 @@
+<div class="outerheaven weapon-attack">
+  <header class="card-header flexrow">
+    <img src="{{item.img}}" title="{{item.name}}" height="32" width="32"/>
+    <h3 class="item-name">{{item.name}}</h3>
+  </header>
+
+  {{!-- Attack Roll --}}
+  <div class="attack-details">
+    <div class="dice-roll">
+      <div class="dice-result">
+        <div class="dice-flavor">vs {{vsDefense}}</div>
+        <h4 class="dice-total" data-tooltip="{{atkRoll.formula}}">{{atkRoll.total}}</h4>
+        {{{atkRoll.tooltip}}}
+      </div>
+    </div>
+  </div>
+
+  {{!-- Ammo and Range info --}}
+  <div class="ammo-range flexcol">
+    <div class="ammo">
+      {{#if (or item.system.capacity.value item.system.capacity.max noAmmo)}}
+        {{#if (eq item.system.weaponType "ranged")}}
+          {{localize "OH.Ammo"}}
+        {{else}}
+          {{localize "OH.Uses"}}
+        {{/if}}
+        {{item.system.capacity.value}}{{#if item.system.capacity.max}} / {{item.system.capacity.max}}{{/if}}
+        {{#if noAmmo}}
+          <i class="fas fa-exclamation-triangle ammo-empty" data-tooltip="OH.NoAmmo"></i>
+        {{/if}}
+      {{/if}}
+    </div>
+    <span class="range">{{localize "OH.Range"}} {{item.system.range}}</span>
+  </div>
+
+  {{!-- Damage Roll --}}
+  <div class="damage-details">
+    <div class="dice-roll">
+      <div class="dice-result">
+        <div class="dice-flavor">{{lookup config.damageTypes item.system.damageType}}</div>
+        <h4 class="dice-total" data-tooltip="{{dmgRoll.formula}}">{{dmgRoll.total}}</h4>
+        {{{dmgRoll.tooltip}}}
+      </div>
+    </div>
+  </div>
+
+  {{!-- Attack Cost and Apply Damage button --}}
+  <div class="attack-costs flexrow">
+    <div class="details flexcol">
+      <span class="number-of-attacks">{{item.system.numberOfAttacks}} 
+        {{#if (eq item.system.weaponType "ranged")}}{{localize "OH.Shots"}}{{else}}{{localize "OH.Strikes"}}{{/if}}
+      </span>
+      <span class="ap">{{localize "OH.TotalAP"}} {{item.system.totalAp}}</span>
+    </div>
+    <button class="apply-damage"> <i class="fas fa-check"></i> </button>
+  </div>
+
+  {{!-- Properties --}}
+  <div class="properties">
+    <span class="properties-header">{{localize "OH.Properties"}}</span><br>
+    <span class="properties-content">{{item.system.properties}}</span>
+  </div>
+
+  {{!-- Targets --}}
+  {{#if results}}
+    <div class="target-results flexcol">
+      <h4 class="target-header">{{localize "OH.Targets"}}</h4>
+      {{#each results as |result index|}}
+        <div class="target-result flexrow">
+          {{!-- Target icon --}}
+          <img class="target-icon" src="{{result.img}}" data-edit="img" title="{{result.name}}" />
+          {{!-- Target info --}}
+          <div class="flexcol">
+            <div class="flexrow">
+              <span class="target-name">{{result.name}}</span>
+              {{#if result.distance}}
+                <span class="target-range">{{localize "OH.Range"}} {{result.distance}}</span>
+              {{/if}}
+            </div>
+
+          <div class="target-rolls flexrow">
+            {{!-- Effective attack roll --}}
+            <div class="dice-roll target-attack">
+              <div class="dice-result">
+                <div class="dice-flavor">vs {{@root.vsDefense}} ({{result.defense}})</div>
+                <h4 class="dice-total {{#if result.isHit}}hit{{else}}miss{{/if}}" data-tooltip="{{result.attackFormula}}">
+                  {{result.attack}}
+                </h4>
+                {{{@root.atkRoll.tooltip}}}
+              </div>
+            </div>
+
+            {{!-- Effective damage roll --}}
+            <div class="dice-roll target-damage">
+              <div class="dice-result">
+                <div class="dice-flavor">{{lookup @root.config.damageTypes @root.item.system.damageType}}</div>
+                <h4 class="dice-total" data-tooltip="{{result.damageFormula}}">{{result.damage}}</h4>
+                {{{@root.dmgRoll.tooltip}}}
+              </div>
+            </div>
+
+            {{!-- Apply damage button --}}
+            <button class="apply-damage" data-target-id="{{result._id}}"> 
+              {{#if result.isHit}} <i class="fas fa-check"></i> {{else}} <i class="fas fa-times"></i> {{/if}}
+            </button>
+            </div>
+          </div>
+
+
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+</div>

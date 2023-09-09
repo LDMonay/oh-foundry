@@ -10,7 +10,7 @@
     ],
     "compatibility": {
         "minimum": "10",
-        "verified": "10",
+        "verified": "11",
         "maximum": "11"
     },
     "esmodules": ["outerheaven.mjs"],
@@ -21,6 +21,9 @@
     "gridUnits": "sq",
     "primaryTokenAttribute": "health",
     "secondaryTokenAttribute": "power",
+    "url": "https://github.com/LDMonay/oh-foundry",
+    "manifest": "https://github.com/LDMonay/oh-foundry/releases/latest/download/system.json",
+    "download": "https://github.com/LDMonay/oh-foundry/releases/download/v0.01/system.zip",
     "flags": {
         "hotReload": {
             "extensions": ["hbs", "json"]

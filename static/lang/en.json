@@ -1,7 +1,68 @@
 {
+    "TYPES": {
+        "Item": {
+            "ability": "Ability",
+            "armor": "Armor",
+            "equipment": "Equipment",
+            "skill": "Skill",
+            "weapon": "Weapon"
+        },
+        "Actor": {
+            "unit": "Unit"
+        }
+    },
+
     "OH": {
         "Settings": {
-            "CriticalsName": "Critical Handling"
-        }
+            "Criticals": {
+                "Name": "Critical Handling",
+                "Hint": "If and how often damage dice explode",
+                "Unlimited": "Unlimited explosion (x)",
+                "Limited": "Explosion limited to 1 (xo)",
+                "None": "No explosion"
+            }
+        },
+
+        "DamageTypes": {
+            "Untyped": "Untyped",
+            "Energy": "Energy",
+            "Explosive": "Explosive",
+            "Ballistic": "Ballistic",
+            "Piercing": "Piercing",
+            "Slashing": "Slashing",
+            "Crushing": "Crushing",
+            "Fire": "Fire",
+            "Gravity": "Gravity",
+            "Bleeding": "Bleeding",
+            "Toxic": "Toxic",
+            "Radiation": "Radiation",
+            "Magic": "Magic",
+            "Psi": "Psi",
+            "Holy": "Holy",
+            "Unholy": "Unholy",
+            "True": "True",
+            "All": "All"
+        },
+
+        "DefenseTypes": {
+            "Profile": "Profile",
+            "Defense": "Defense"
+        },
+
+        "WeaponTypes": {
+            "Melee": "Melee",
+            "Ranged": "Ranged"
+        },
+
+        "Targets": "Targets",
+        "Shots": "Shots",
+        "Strikes": "Strikes",
+        "Ammo": "Ammo",
+        "NoAmmo": "No Ammo",
+        "Uses": "Uses",
+        "Range": "Range",
+        "RangeModifier": "Range Modifier",
+        "TotalAP": "Total AP",
+        "Properties": "Properties"
     }
 }

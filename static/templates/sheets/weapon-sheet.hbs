@@ -6,11 +6,7 @@
     <div>
         <div class="itemSection">
             <select class="floatLeft" name="system.weaponType">
-                {{#select system.weaponType}}
-                {{#each config.weaponTypes as |name type|}}
-                <option value="{{type}}">{{name}}</option>
-                {{/each}}
-                {{/select}}
+                {{selectOptions config.weaponTypes selected=system.weaponType}}
             </select>
             <div class="floatRight">Power cost : <input class="smallInput" type="text" name="system.powerCost" value="{{system.powerCost}}" data-dtype="Number" /></div>
             <br />

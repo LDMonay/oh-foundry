@@ -10,11 +10,7 @@
         <td><input class="mediumInput" type="text" name="system.damagePerAttack" value="{{system.damagePerAttack}}" /></td>
         <td>
             <select style="width:100%; text-align:center;" name="system.damageType">
-                {{#select system.damageType}}
-                {{#each config.damageTypes as |name type|}}
-                <option value="{{type}}">{{name}}</option>
-                {{/each}}
-                {{/select}}
+                {{selectOptions config.damageTypes selected=system.damageType localize=true}}
             </select>
         </td>
         <td><input class="smallInput" type="text" name="system.capacity.value" value="{{system.capacity.value}}" data-dtype="Number" /></td>

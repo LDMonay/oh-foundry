@@ -164,12 +164,12 @@ export class OHUnitSheet extends ActorSheet {
 
     _onDisplayDefenses(event) {
         const actorData = this.actor;
-        actorData._onDisplayDefenses();
+        actorData.displayDefenseCard();
     }
 
     _onUseWeapon(event) {
         const li = $(event.currentTarget).parents(".item");
         const item = this.actor.items.get(li.data("itemId"));
-        item.useWeapon(this.actor);
+        item.use({ token: this.token });
     }
 }

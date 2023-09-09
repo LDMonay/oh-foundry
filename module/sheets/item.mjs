@@ -28,7 +28,7 @@ export class OHItemSheet extends ItemSheet {
     async _onArmorBonusCreate(event) {
         if (this.item.type === "armor") {
             const armorBonuses = this.item.toObject().system.armorBonuses;
-            armorBonuses.push({ armorType: CONFIG.OUTERHEAVEN.damageTypes.untyped, value: 0 });
+            armorBonuses.push({ armorType: "untyped", value: 0 });
             await this.item.update({ "system.armorBonuses": armorBonuses });
         }
     }
@@ -49,19 +49,14 @@ export class OHItemSheet extends ItemSheet {
 
         context.config = CONFIG.OUTERHEAVEN;
 
-        // Use a safe clone of the item data for further operations.
-        const itemData = context.item;
-
-        // Retrieve the roll data for TinyMCE editors.
-        context.rollData = {};
-        const actor = this.object?.parent ?? null;
-        if (actor) {
-            context.rollData = actor.getRollData();
+        if (this.type === "armor") {
+            context.armorTypes = { ...CONFIG.OUTERHEAVEN.damageTypes };
+            context.armorTypes.true = "All";
         }
 
         // Add the actor's data to context.data for easier access, as well as flags.
-        context.system = itemData.system;
-        context.flags = itemData.flags;
+        context.system = this.item.system;
+        context.flags = this.item.flags;
 
         return context;
     }

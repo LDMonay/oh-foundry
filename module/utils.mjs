@@ -19,7 +19,7 @@ export async function preloadHandlebarsTemplates() {
         "systems/outerheaven/templates/chat/defense-display.hbs",
         "systems/outerheaven/templates/chat/defense-stats-display.hbs",
         "systems/outerheaven/templates/chat/weapon-display.hbs",
-        "systems/outerheaven/templates/chat/weapon-use.hbs",
+        "systems/outerheaven/templates/chat/weapon-attack.hbs",
     ];
 
     const paths = {};
