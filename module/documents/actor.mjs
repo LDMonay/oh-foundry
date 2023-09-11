@@ -1,4 +1,5 @@
 import { OUTERHEAVEN } from "../config.mjs";
+import { OHArmor } from "../data/armor.mjs";
 
 export class OHActor extends Actor {
     /** @override */
@@ -46,19 +47,7 @@ export class OHActor extends Actor {
         const rollData = { ...this.getRollData(), name: this.name };
 
         // Collect all armor values, discarding any that are 0 or only exist due to the "all" type.
-        const armorParts = [];
-        const armorAll = this.system.armor.all;
-        if (armorAll > 0) armorParts.push(`${OUTERHEAVEN.armorTypes.all} ${armorAll}`);
-        armorParts.push(
-            ...Object.entries(this.system.armor)
-                .map(([type, value]) => ({
-                    type: game.i18n.localize(OUTERHEAVEN.armorTypes[type]),
-                    value,
-                }))
-                .filter((armor) => armor.value > 0 && armor.value > armorAll)
-                .map((armor) => `${armor.type} ${armor.value}`),
-        );
-        rollData.armor = armorParts.join(", ");
+        rollData.armor = OHArmor.getArmorString(this.system.armor);
 
         const rollContent = await renderTemplate(
             "systems/outerheaven/templates/chat/defense-stats-display.hbs",

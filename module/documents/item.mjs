@@ -1,3 +1,4 @@
+import { OUTERHEAVEN } from "../config.mjs";
 import { WeaponAttack } from "../weapon-attack.mjs";
 
 export class OHItem extends Item {

@@ -1,3 +1,4 @@
+import { OHArmor } from "../data/armor.mjs";
 import { onManageActiveEffect, prepareActiveEffectCategories } from "../effects.mjs";
 
 export class OHUnitSheet extends ActorSheet {
@@ -33,7 +34,6 @@ export class OHUnitSheet extends ActorSheet {
      * Organize and classify Items for Character sheets.
      *
      * @param {Object} actorData The actor to prepare.
-     *
      * @return {undefined}
      */
     _prepareItems(context) {
@@ -47,12 +47,15 @@ export class OHUnitSheet extends ActorSheet {
         // Iterate through items, allocating to containers
         for (const i of context.items) {
             i.img = i.img || DEFAULT_TOKEN;
+            i.document = context.actor.items.get(i._id);
+
             // Append to abilities.
             if (i.type === "ability") {
                 abilities.push(i);
             }
             // Append to defenses.
             else if (i.type === "armor") {
+                i.armorBonusString = OHArmor.getArmorString(i.system.armorBonuses);
                 defenses.push(i);
             }
             // Append to equipment.
