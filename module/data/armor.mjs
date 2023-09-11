@@ -24,37 +24,6 @@ export class OHArmor extends foundry.abstract.TypeDataModel {
     }
 
     /**
-     * Get a display suitable string for the armor bonuses of this armor.
-     *
-     * @returns {string} - The display string.
-     */
-    getArmorBonusString() {
-        const armorParts = [];
-        const armorObject = this.armorBonuses.reduce((acc, bonus) => {
-            if (bonus.armorType === "all") {
-                for (const armorType of Object.keys(OUTERHEAVEN.armorTypes)) {
-                    acc[armorType] ??= 0;
-                    acc[armorType] += bonus.value;
-                }
-            } else {
-                acc[bonus.armorType] ??= 0;
-                acc[bonus.armorType] += bonus.value;
-            }
-            return acc;
-        }, {});
-        armorParts.push(
-            ...Object.entries(armorObject)
-                .map(([type, value]) => ({
-                    type: game.i18n.localize(OUTERHEAVEN.armorTypes[type]),
-                    value,
-                }))
-                .filter((armor) => armor.value > 0 && armor.value > (armorObject.all ?? 0))
-                .map((armor) => `${armor.type} ${armor.value}`),
-        );
-        return armorParts.join(", ");
-    }
-
-    /**
      * Get a display suitable string from armor data.
      *
      * @param {Record<string, number> | Array<{ armorType: string, value: number }>} armor - The armor data, either in actor or item format.

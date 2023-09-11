@@ -149,7 +149,7 @@ export class WeaponAttack {
      * @param {object} [options={}] - Options for how the attack is rolled.
      * @param {boolean} [options.chatMessage=true] - Whether to create a chat message for the attack.
      * @param {boolean} [options.updateDocuments=true] - Whether to update involved documents after the attack.
-     * @returns {Promise<Collection<AttackResult>>}
+     * @returns {Promise<WeaponAttack>} The rolled weapon attack.
      */
     async use({ chatMessage = true, updateDocuments = true, chatMessageOptions = {} } = {}) {
         this.targets = await this._acquireTargets();
@@ -171,9 +171,9 @@ export class WeaponAttack {
         }
 
         // Create chat message.
-        if (chatMessage) await this.toMessage({ temporary: !chatMessage, ...chatMessageOptions });
+        if (chatMessage) this.chatMessage = await this.toMessage(chatMessageOptions);
 
-        return this.results;
+        return this;
     }
 
     /**
@@ -342,10 +342,12 @@ export class WeaponAttack {
             content: content,
             rolls: [this.attackRoll, this.damageRoll],
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            rollMode: rollMode,
         };
         chatData.flags.outerheaven.results = this.results;
-        ChatMessage.applyRollMode(chatData, rollMode);
-        return temporary ? new ChatMessage.implementation(chatData) : ChatMessage.create(chatData, options);
+        return temporary
+            ? new ChatMessage.implementation(chatData)
+            : ChatMessage.create(chatData, { ...options, rollMode });
     }
 
     /**
