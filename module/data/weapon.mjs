@@ -37,10 +37,4 @@ export class OHWeapon extends foundry.abstract.TypeDataModel {
             this.capacity.value ??= 0;
         }
     }
-
-    /** @override */
-    prepareDerivedData() {
-        this.totalAp = this.numberOfAttacks * this.armorPenetration;
-        this.canReload = this.capacity.max !== null && this.capacity.value !== null;
-    }
 }

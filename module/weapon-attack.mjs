@@ -242,10 +242,17 @@ export class WeaponAttack {
             _id: target.uuid,
         };
 
+        // Basic defense data
         const actor = target.actor;
         const defenseType = this.item.system.weaponType === "ranged" ? "profile" : "defense";
-        result.defense = actor.system[defenseType].total;
+        const defenseValue = actor.system[defenseType].total;
+        const defenseLabel = actor.system.schema.fields[defenseType].label;
+        result.defense = {
+            total: defenseValue,
+            formula: `${defenseValue}[${game.i18n.localize(defenseLabel)}]`,
+        };
 
+        // Determine effective attack value and hit state
         if (this.item.system.weaponType === "ranged" && this.item.system.range > 0) {
             const attackRange = this.item.system.range ?? 1;
             if (this.token) {
@@ -254,18 +261,34 @@ export class WeaponAttack {
                 result.distance = 0;
             }
             const distanceOverRange = Math.max(result.distance - attackRange, 0);
-            result.additionalRangeIncrements = Math.round(distanceOverRange / attackRange);
-            result.rangeModifier = result.additionalRangeIncrements * 2;
-            result.attack = this.attackRoll.total - result.rangeModifier;
-        } else if (this.item.system.weaponType === "melee") {
-            result.attack = this.attackRoll.total;
+            const additionalRangeIncrements = Math.ceil(distanceOverRange / attackRange);
+            const rangeModifier = additionalRangeIncrements * 2;
+            if (rangeModifier) {
+                result.defense.total += rangeModifier;
+                result.defense.formula += ` + ${rangeModifier}[${game.i18n.localize("OH.RangeModifier")}]`;
+            }
         }
-        result.isHit = result.attack >= result.defense;
+        result.isHit = this.attackRoll.total >= result.defense.total;
 
-        const damageType = this.damageRoll.damageType;
-        const damageValue = this.damageRoll.total;
-        const damageReduction = actor.system.armor[damageType] ?? 0;
-        result.damage = Math.max(damageValue - damageReduction, 0);
+        // Determine effective damage
+        const { damageType, total: damageValue } = this.damageRoll;
+        const armor = actor.system.armor[damageType] ?? 0;
+        const { armorPenetration, numberOfAttacks } = this.item.system;
+        const damageReduction = Math.max(armor - armorPenetration, 0) * numberOfAttacks;
+        const damageTotal = Math.max(damageValue - damageReduction, numberOfAttacks);
+        const isMinDamage = damageReduction && damageTotal === numberOfAttacks;
+        let damageFormula = `${damageValue}[${game.i18n.localize("OH.Damage")}]`;
+        if (damageReduction) {
+            const attackLabel = this.item.system.weaponType === "ranged" ? "OH.Shots" : "OH.Strikes";
+            damageFormula += ` - (${numberOfAttacks}[${game.i18n.localize(
+                attackLabel,
+            )}] * ${armor}[${game.i18n.localize("TYPES.Item.armor")}])`;
+        }
+        result.damage = {
+            total: damageTotal,
+            formula: damageFormula,
+            isMinimum: isMinDamage,
+        };
 
         return result;
     }
@@ -323,21 +346,9 @@ export class WeaponAttack {
         renderData.results = this.results.map((result) => {
             const target = this.targets.find((target) => target.uuid === result._id);
 
-            // Alter formulas is there are additional parts
-            const attackFormula = result.rangeModifier
-                ? `${this.attackRoll.formula} - ${result.rangeModifier}[${game.i18n.localize("OH.RangeModifier")}]`
-                : this.attackRoll.formula;
-            const damageFormula =
-                result.damage !== this.damageRoll.total
-                    ? this.damageRoll.formula +
-                      ` - ${this.damageRoll.total - result.damage}[${game.i18n.localize("TYPES.Item.armor")}]`
-                    : this.damageRoll.formula;
-
             return {
                 ...result,
                 img: target.texture.src,
-                attackFormula,
-                damageFormula,
                 name: target.name,
             };
         });
@@ -380,9 +391,12 @@ export class WeaponAttack {
  * @typedef {object} AttackResult
  * @property {string} _id - The UUID of the target.
  * @property {boolean} isHit - Whether the attack hit the target.
- * @property {number} attack - The effective attack value, including range modifiers.
- * @property {number} damage - The effective amount of damage applicable to the target.
- * @property {number} defense - The target's appropriate defense value to overcome.
- * @property {number} range - The distance between the attacker and the target.
- * @property {number} rangeModifier - The range modifier applied to the attack.
+ * @property {object} damage - Damage data for this particular target.
+ * @property {number} damage.total - The total damage dealt to the target.
+ * @property {string} damage.formula - The formula used to calculate the damage dealt to the target.
+ * @property {boolean} damage.isMinimum - Whether the damage dealt to the target is the minimum possible due to armor.
+ * @property {object} defense - Defense/Profile data for this particular target.
+ * @property {number} defense.total - The total defense of the target.
+ * @property {string} defense.formula - The formula used to calculate the defense of the target.
+ * @property {number} distance - The total distance between attacker and target; 0 for melee.
  */

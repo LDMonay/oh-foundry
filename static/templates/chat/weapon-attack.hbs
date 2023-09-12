@@ -30,7 +30,9 @@
         {{/if}}
       {{/if}}
     </div>
-    <span class="range">{{localize "OH.Range"}} {{item.system.range}}</span>
+      {{#if (eq item.system.weaponType "ranged")}}
+        <span class="range">{{localize "OH.Range"}} {{item.system.range}}</span>
+      {{/if}}
   </div>
 
   {{!-- Damage Roll --}}
@@ -82,11 +84,10 @@
             {{!-- Effective attack roll --}}
             <div class="dice-roll target-attack">
               <div class="dice-result">
-                <div class="dice-flavor">vs {{@root.vsDefense}} ({{result.defense}})</div>
-                <h4 class="dice-total {{#if result.isHit}}hit{{else}}miss{{/if}}" data-tooltip="{{result.attackFormula}}">
-                  {{result.attack}}
+                <div class="dice-flavor">{{@root.vsDefense}}</div>
+                <h4 class="dice-total {{#if result.isHit}}hit{{else}}miss{{/if}}" data-tooltip="{{result.defense.formula}}">
+                  {{result.defense.total}}
                 </h4>
-                {{{@root.atkRoll.tooltip}}}
               </div>
             </div>
 
@@ -94,7 +95,9 @@
             <div class="dice-roll target-damage">
               <div class="dice-result">
                 <div class="dice-flavor">{{lookup @root.config.damageTypes @root.item.system.damageType}}</div>
-                <h4 class="dice-total" data-tooltip="{{result.damageFormula}}">{{result.damage}}</h4>
+                <h4 class="dice-total {{#if result.damage.isMinimum}}min-damage{{/if}}" data-tooltip="{{result.damage.formula}}">
+                  {{result.damage.total}}
+                </h4>
                 {{{@root.dmgRoll.tooltip}}}
               </div>
             </div>

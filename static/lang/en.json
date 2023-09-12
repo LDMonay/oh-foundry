@@ -63,6 +63,7 @@
         "Range": "Range",
         "RangeModifier": "Range Modifier",
         "TotalAP": "Total AP",
+        "Damage": "Damage",
         "Properties": "Properties"
     }
 }
