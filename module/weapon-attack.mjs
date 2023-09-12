@@ -322,14 +322,22 @@ export class WeaponAttack {
         // Enrich result data with data only needed for display.
         renderData.results = this.results.map((result) => {
             const target = this.targets.find((target) => target.uuid === result._id);
+
+            // Alter formulas is there are additional parts
+            const attackFormula = result.rangeModifier
+                ? `${this.attackRoll.formula} - ${result.rangeModifier}[${game.i18n.localize("OH.RangeModifier")}]`
+                : this.attackRoll.formula;
+            const damageFormula =
+                result.damage !== this.damageRoll.total
+                    ? this.damageRoll.formula +
+                      ` - ${this.damageRoll.total - result.damage}[${game.i18n.localize("TYPES.Item.armor")}]`
+                    : this.damageRoll.formula;
+
             return {
                 ...result,
                 img: target.texture.src,
-                attackFormula:
-                    this.attackRoll.formula + ` - ${result.rangeModifier}[${game.i18n.localize("OH.RangeModifier")}]`,
-                damageFormula:
-                    this.damageRoll.formula +
-                    ` - ${this.damageRoll.total - result.damage}[${game.i18n.localize("TYPES.Item.armor")}]`,
+                attackFormula,
+                damageFormula,
                 name: target.name,
             };
         });
