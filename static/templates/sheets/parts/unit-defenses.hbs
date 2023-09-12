@@ -19,8 +19,7 @@
                     <td class="left"><div class="flexCenter">
                             <img src="{{item.img}}" title="{{item.name}}" width="24" height="24" />
                             <div style="margin-left: 5px"><a class="item-display">{{item.name}}</a></div></div></td>
-                    <td>{{#if item.system.armor}}{{item.system.armor}}{{/if}}</td>
-                    <!-- TODO: How to display armorBonuses? -->
+                    <td>{{#if item.armorBonusString}}{{item.armorBonusString}}{{/if}}</td>
                     <td>{{#if item.system.benefitsDescription}}
                             <p class="descMaxLength">{{item.system.benefitsDescription}}</p>{{/if}}</td>
                     <td class="floatRight">

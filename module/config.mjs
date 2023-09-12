@@ -1,32 +1,40 @@
 export const OUTERHEAVEN = {};
 
 OUTERHEAVEN.weaponTypes = {
-    ranged: "Ranged",
-    melee: "Melee",
+    ranged: "OH.WeaponTypes.Ranged",
+    melee: "OH.WeaponTypes.Melee",
 };
 
-OUTERHEAVEN.critSettings = {
-    fullCrit: "Full Critical",
-    limitedCrit: "Limited Critical",
-    noCrit: "No Critical",
+OUTERHEAVEN.defenseTypes = {
+    profile: "OH.DefenseTypes.Profile",
+    defense: "OH.DefenseTypes.Defense",
+};
+
+const baseDamageTypes = {
+    untyped: "OH.DamageTypes.Untyped",
+    energy: "OH.DamageTypes.Energy",
+    explosive: "OH.DamageTypes.Explosive",
+    ballistic: "OH.DamageTypes.Ballistic",
+    piercing: "OH.DamageTypes.Piercing",
+    slashing: "OH.DamageTypes.Slashing",
+    crushing: "OH.DamageTypes.Crushing",
+    fire: "OH.DamageTypes.Fire",
+    gravity: "OH.DamageTypes.Gravity",
+    bleeding: "OH.DamageTypes.Bleeding",
+    toxic: "OH.DamageTypes.Toxic",
+    radiation: "OH.DamageTypes.Radiation",
+    magic: "OH.DamageTypes.Magic",
+    psi: "OH.DamageTypes.Psi",
+    holy: "OH.DamageTypes.Holy",
+    unholy: "OH.DamageTypes.Unholy",
 };
 
 OUTERHEAVEN.damageTypes = {
-    untyped: "Untyped",
-    true: "True",
-    energy: "Energy",
-    explosive: "Explosive",
-    ballistic: "Ballistic",
-    piercing: "Piercing",
-    slashing: "Slashing",
-    crushing: "Crushing",
-    fire: "Fire",
-    gravity: "Gravity",
-    bleeding: "Bleeding",
-    toxic: "Toxic",
-    radiation: "Radiation",
-    magic: "Magic",
-    psi: "Psi",
-    holy: "Holy",
-    unholy: "Unholy",
+    ...baseDamageTypes,
+    true: "OH.DamageTypes.True",
+};
+
+OUTERHEAVEN.armorTypes = {
+    ...baseDamageTypes,
+    all: "OH.DamageTypes.All",
 };

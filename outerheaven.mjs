@@ -8,13 +8,18 @@ import * as documents from "./module/documents/_module.mjs";
 import * as dataModels from "./module/data/_module.mjs";
 import * as sheets from "./module/sheets/_module.mjs";
 import * as utils from "./module/utils.mjs";
+import * as dice from "./module/dice/_module.mjs";
 import { registerSettings } from "./module/settings.mjs";
+import { WeaponAttack } from "./module/weapon-attack.mjs";
 
 // API
-globalThis.outerHeaven = {
+// TODO: Determine actually desired API
+globalThis.outerheaven = {
     documents,
     dataModels,
+    dice,
     sheets,
+    WeaponAttack,
 };
 
 Hooks.once("init", function () {
@@ -42,6 +47,12 @@ Hooks.once("init", function () {
     Items.unregisterSheet("core", ItemSheet);
     Items.registerSheet("outerheaven", sheets.OHItemSheet, { makeDefault: true });
 
+    // Dice
+    CONFIG.Dice.rolls.push(dice.DamageRoll);
+
+    // Chat
+    CONFIG.ChatMessage.documentClass = documents.OHChatMessage;
+
     registerSettings();
     utils.preloadHandlebarsTemplates();
 
@@ -50,10 +61,28 @@ Hooks.once("init", function () {
     });
 });
 
+Hooks.once("i18nInit", function () {
+    console.log("Outer Heaven | Initializing translations...");
+    const toTranslate = ["damageTypes", "armorTypes", "weaponTypes"];
+    for (const configMember of toTranslate) {
+        for (const [key, value] of Object.entries(OUTERHEAVEN[configMember])) {
+            OUTERHEAVEN[configMember][key] = game.i18n.localize(value);
+        }
+    }
+});
+
 Hooks.once("ready", function () {
     // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
     Hooks.on("hotbarDrop", (bar, data, slot) => createItemMacro(data, slot));
     console.log("Outer Heaven | Activated Macro Drag&Drop");
+});
+
+Hooks.on("renderChatLog", (app, html, data) => {
+    html.on("click", "button.apply-damage", (event) => {
+        const message = game.messages.get(event.currentTarget.closest(".message").dataset.messageId);
+        const targetId = event.currentTarget.dataset.targetId;
+        message.weaponAttack.applyTargetDamage(targetId);
+    });
 });
 
 async function createItemMacro(data, slot) {

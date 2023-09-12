@@ -1,4 +1,5 @@
-import * as Dice from "../dice.js";
+import { OUTERHEAVEN } from "../config.mjs";
+import { WeaponAttack } from "../weapon-attack.mjs";
 
 export class OHItem extends Item {
     displayTemplate = {
@@ -38,7 +39,16 @@ export class OHItem extends Item {
         });
     }
 
-    async useWeapon(ActorData) {
-        await Dice.UseWeapon({ actorData: ActorData, weaponData: this });
+    /**
+     * Use this item.
+     *
+     * @param {object} options - Options which configure how the item is used.
+     * @param {TokenDocument} [options.token] - The specific token that is using this item.
+     * @param {boolean} [options.createMessage=true] - Whether to create a chat message for this item.
+     * @returns {Promise<ChatMessage>} - The created chat message, if any.
+     */
+    async use(options = {}) {
+        const { token, ...otherOptions } = options;
+        if (this.type === "weapon") return new WeaponAttack(token ?? this.actor, this).use(otherOptions);
     }
 }

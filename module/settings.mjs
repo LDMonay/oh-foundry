@@ -1,8 +1,13 @@
+/**
+ * Register the system's settings.
+ *
+ * @returns {void}
+ */
 export function registerSettings() {
-    // TODO: Localisation
+    // Damage dice explosion
     game.settings.register("outerheaven", "criticals", {
-        name: "OH.Settings.CriticalsName",
-        hint: "OH.Settings.CriticalsHint",
+        name: "OH.Settings.Criticals.Name",
+        hint: "OH.Settings.Criticals.Hint",
         scope: "world",
         config: true,
         type: String,

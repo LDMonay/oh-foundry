@@ -25,8 +25,16 @@ export class OHWeapon extends foundry.abstract.TypeDataModel {
             attackBonus: new fields.NumberField({ initial: 0 }),
             armorPenetration: new fields.NumberField({ initial: 0 }),
             handedness: new fields.StringField({ initial: "", nullable: false }),
-            prop: new fields.StringField({ initial: "", nullable: false }),
-            range: new fields.NumberField(),
+            properties: new fields.StringField({ initial: "", nullable: false }),
+            range: new fields.NumberField({ label: "OH.Range" }),
+            powerCost: new fields.NumberField({ initial: 1, nullable: false }),
         };
+    }
+
+    /** @override */
+    prepareBaseData() {
+        if (typeof this.capacity.max === "number") {
+            this.capacity.value ??= 0;
+        }
     }
 }

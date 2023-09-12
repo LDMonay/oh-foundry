@@ -10,11 +10,14 @@ export class OHUnit extends foundry.abstract.TypeDataModel {
             aim: new fields.NumberField({ initial: 0, nullable: false }),
             baseUnitPoints: new fields.NumberField({ initial: 0, nullable: false }),
             baseUnitPointsIgnore: new fields.BooleanField(),
-            defense: new fields.SchemaField({
-                base: new fields.NumberField({ initial: 11, nullable: false }),
-                miscBonus: new fields.NumberField({ initial: 0, nullable: false }),
-                stanceBonus: new fields.NumberField({ initial: 0, nullable: false }),
-            }),
+            defense: new fields.SchemaField(
+                {
+                    base: new fields.NumberField({ initial: 11, nullable: false }),
+                    miscBonus: new fields.NumberField({ initial: 0, nullable: false }),
+                    stanceBonus: new fields.NumberField({ initial: 0, nullable: false }),
+                },
+                { label: "OH.DefenseTypes.Defense" },
+            ),
             description: new fields.StringField({ blank: true, required: true }),
             health: new fields.SchemaField({
                 ...ValueIsUsedTemplate(),
@@ -25,11 +28,14 @@ export class OHUnit extends foundry.abstract.TypeDataModel {
             maxPoints: new fields.NumberField({ initial: 0, nullable: false }),
             melee: new fields.NumberField({ initial: 0, nullable: false }),
             notes: new fields.StringField({ blank: true, required: true }),
-            profile: new fields.SchemaField({
-                base: new fields.NumberField({ initial: 6, nullable: false }),
-                miscBonus: new fields.NumberField({ initial: 0, nullable: false }),
-                stanceBonus: new fields.NumberField({ initial: 0, nullable: false }),
-            }),
+            profile: new fields.SchemaField(
+                {
+                    base: new fields.NumberField({ initial: 6, nullable: false }),
+                    miscBonus: new fields.NumberField({ initial: 0, nullable: false }),
+                    stanceBonus: new fields.NumberField({ initial: 0, nullable: false }),
+                },
+                { label: "OH.DefenseTypes.Profile" },
+            ),
             saves: new fields.SchemaField({
                 grit: new fields.StringField(),
                 awareness: new fields.StringField(),
