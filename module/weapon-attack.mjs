@@ -279,10 +279,14 @@ export class WeaponAttack {
         const isMinDamage = damageReduction && damageTotal === numberOfAttacks;
         let damageFormula = `${damageValue}[${game.i18n.localize("OH.Damage")}]`;
         if (damageReduction) {
-            const attackLabel = this.item.system.weaponType === "ranged" ? "OH.Shots" : "OH.Strikes";
-            damageFormula += ` - (${numberOfAttacks}[${game.i18n.localize(
-                attackLabel,
-            )}] * ${armor}[${game.i18n.localize("TYPES.Item.armor")}])`;
+            const attackLabel = game.i18n.localize(
+                this.item.system.weaponType === "ranged" ? "OH.Shots" : "OH.Strikes",
+            );
+            const apPart = armorPenetration ? `${armorPenetration}[${game.i18n.localize("OH.ArmorPenetration")}]` : "";
+            const damageReductionPart = `${armor}[${game.i18n.localize("TYPES.Item.armor")}]`;
+            damageFormula += apPart
+                ? ` - ${numberOfAttacks}[${attackLabel}] * (${damageReductionPart} - ${apPart})`
+                : ` - ${numberOfAttacks}[${attackLabel}] * ${damageReductionPart}`;
         }
         result.damage = {
             total: damageTotal,
@@ -341,6 +345,7 @@ export class WeaponAttack {
         renderData.dmgRoll = this.damageRoll;
         renderData.dmgRoll.tooltip = await this.damageRoll.getTooltip();
         renderData.vsDefense = game.i18n.localize(this.item.system.weaponType === "ranged" ? "Profile" : "Defense");
+        renderData.totalAp = this.item.system.numberOfAttacks * this.item.system.armorPenetration;
 
         // Enrich result data with data only needed for display.
         renderData.results = this.results.map((result) => {

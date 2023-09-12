@@ -52,7 +52,7 @@
       <span class="number-of-attacks">{{item.system.numberOfAttacks}} 
         {{#if (eq item.system.weaponType "ranged")}}{{localize "OH.Shots"}}{{else}}{{localize "OH.Strikes"}}{{/if}}
       </span>
-      <span class="ap">{{localize "OH.TotalAP"}} {{item.system.totalAp}}</span>
+      <span class="ap">{{localize "OH.TotalAP"}} {{totalAp}}</span>
     </div>
     <button class="apply-damage"> <i class="fas fa-check"></i> </button>
   </div>
