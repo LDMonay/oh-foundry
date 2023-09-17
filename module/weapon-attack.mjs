@@ -276,7 +276,7 @@ export class WeaponAttack {
         const { armorPenetration, numberOfAttacks } = this.item.system;
         const damageReduction = Math.max(armor - armorPenetration, 0) * numberOfAttacks;
         const damageTotal = Math.max(damageValue - damageReduction, numberOfAttacks);
-        const isMinDamage = damageReduction && damageTotal === numberOfAttacks;
+        const isMinDamage = Boolean(damageReduction && damageTotal === numberOfAttacks);
         let damageFormula = `${damageValue}[${game.i18n.localize("OH.Damage")}]`;
         if (damageReduction) {
             const attackLabel = game.i18n.localize(
@@ -369,6 +369,8 @@ export class WeaponAttack {
             rollMode: rollMode,
         };
         chatData.flags.outerheaven.results = this.results;
+        chatData.flags.outerheaven.numberOfAttacks = this.item.system.numberOfAttacks;
+        chatData.flags.outerheaven.armorPenetration = this.item.system.armorPenetration;
         return temporary
             ? new ChatMessage.implementation(chatData)
             : ChatMessage.create(chatData, { ...options, rollMode });
@@ -383,12 +385,19 @@ export class WeaponAttack {
     async applyTargetDamage(targetId) {
         // Fall back to all selected tokens if no target is provided.
         if (targetId == null)
-            return OHActor.applyDamage({ value: this.damageRoll.total, type: this.damageRoll.damageType });
+            return OHActor.applyDamage({
+                total: this.damageRoll.total,
+                type: this.damageRoll.damageType,
+                numberOfAttacks:
+                    this._messageFlags.outerheaven.numberOfAttacks ?? this.item?.system?.numberOfAttacks ?? 1,
+                armorPenetration:
+                    this._messageFlags.outerheaven.armorPenetration ?? this.item?.system?.armorPenetration ?? 0,
+            });
 
         const target = await fromUuid(targetId);
         const actor = target.actor;
-        // TODO: Alternatively, introduce damage flag so signal that the value is already final, and then use result's damage
-        return actor.applyDamage({ value: this.damageRoll.total, type: this.damageRoll.damageType });
+        const result = this.results.get(targetId);
+        return actor.applyDamage({ total: result.damage.total, type: this.damageRoll.damageType, isFinal: true });
     }
 }
 
@@ -404,4 +413,13 @@ export class WeaponAttack {
  * @property {number} defense.total - The total defense of the target.
  * @property {string} defense.formula - The formula used to calculate the defense of the target.
  * @property {number} distance - The total distance between attacker and target; 0 for melee.
+ */
+
+/**
+ * @typedef {object} DamageInstance
+ * @property {number} total - The total damage dealt.
+ * @property {DamageType} type - The type of damage dealt.
+ * @property {number} [numberOfAttacks] - The number of attacks that were rolled; used for armor calculations.
+ * @property {number} [armorPenetration] - The armor penetration of the attack; used for armor calculations.
+ * @property {boolean} [isFinal] - Whether the damage is final, i.e. ignores armor.
  */
