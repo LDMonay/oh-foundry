@@ -20,6 +20,12 @@
                 "Unlimited": "Unlimited explosion (x)",
                 "Limited": "Explosion limited to 1 (xo)",
                 "None": "No explosion"
+            },
+            "ItemCompendiums": {
+                "Name": "Item Compendiums",
+                "Hint": "Compendiums opened when importing items in an actor sheet",
+                "Label": "Open Item Compendium Configuration",
+                "TypeLabel": "{type} Compendium"
             }
         },
 

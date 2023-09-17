@@ -1,3 +1,4 @@
+import { SYSTEM_ID } from "../const.mjs";
 import { OHArmor } from "../data/armor.mjs";
 import { onManageActiveEffect, prepareActiveEffectCategories } from "../effects.mjs";
 
@@ -99,6 +100,7 @@ export class OHUnitSheet extends ActorSheet {
 
         // Add Inventory Item
         html.find(".item-create").click(this._onItemCreate.bind(this));
+        html.find(".item-import").click(this._onItemImport.bind(this));
 
         // Delete Inventory Item
         html.find(".item-delete").click((ev) => {
@@ -147,6 +149,22 @@ export class OHUnitSheet extends ActorSheet {
 
         // Finally, create the item!
         return await Item.create(itemData, { parent: this.actor });
+    }
+
+    /**
+     * Handle opening compendium applications for a certain item type.
+     *
+     * @param {Event} event - The originating click event.
+     * @private
+     */
+    _onItemImport(event) {
+        event.preventDefault();
+        const createButton = event.currentTarget.previousElementSibling;
+        const type = createButton.dataset.type;
+
+        const itemCompendiums = game.settings.get(SYSTEM_ID, "itemCompendiums");
+        if (!itemCompendiums[type]) return;
+        game.packs.get(itemCompendiums[type]).render(true);
     }
 
     async _onInlineEdit(event) {
