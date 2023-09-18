@@ -65,8 +65,8 @@ export class OHActor extends Actor {
     /**
      * Apply damage to specific actors, or all selected token actors.
      *
-     * @param {number | { value: number, type: string }} damageValue - The amount of damage to apply.
-     *                                                                 If only a number is given, damage type is assumed to be "true".
+     * @param {number | DamageInstance} damageValue - The amount of damage to apply.
+     *   If only a number is given, damage type is assumed to be `untyped`, and `isFinal` is assumed to be true.
      * @param {OHActor | OHActor[] | null} target - The actor(s) to apply damage to. If null, all selected token actors are used.
      * @returns {Promise<OHActor[]>} - The updated actors.
      */
@@ -74,12 +74,23 @@ export class OHActor extends Actor {
         const rawTargets =
             target === null ? canvas.tokens.controlled.map((t) => t.actor) : Array.isArray(target) ? target : [target];
         const targets = [...new Set(rawTargets.filter((t) => Boolean(t)))];
-        const damage = typeof damageValue === "number" ? { value: damageValue, type: "true" } : damageValue;
+        const damageDefaults = { total: 0, type: "untyped", numberOfAttacks: 1, armorPenetration: 0, isFinal: false };
+        /** @type {DamageInstance} */
+        const damage =
+            typeof damageValue === "number"
+                ? { ...damageDefaults, total: damageValue, isFinal: true }
+                : { ...damageDefaults, ...damageValue };
         const updatePromises = targets.map((target) => {
-            const armor = target.system.armor;
-            const { type, value } = damage;
-            const damageReduction = armor[type] ?? 0;
-            const damageTaken = Math.max(value - damageReduction, 0);
+            const { total, type, numberOfAttacks, armorPenetration, isFinal } = damage;
+
+            // If the damage is final, skip armor handling and apply damage as-is
+            if (isFinal) {
+                return target.update({ "system.health.value": Math.max(target.system.health.value - total, 0) });
+            }
+
+            const armor = target.system.armor[type] ?? 0;
+            const damageReduction = Math.max((armor - armorPenetration) * numberOfAttacks, 0);
+            const damageTaken = Math.max(total - damageReduction, numberOfAttacks);
             const currentHealth = target.system.health.value;
             const newHealth = Math.max(currentHealth - damageTaken, 0);
             return target.update({ "system.health.value": newHealth });
@@ -91,7 +102,7 @@ export class OHActor extends Actor {
      * Apply damage to this actor.
      *
      * @see {@link OHActor.applyDamage}
-     * @param {number | { value: number, type: string }} damageValue - The amount of damage to apply.
+     * @param {number | DamageInstance} damageValue - The amount of damage to apply.
      * @returns {Promise<OHActor>} - The updated actor.
      */
     async applyDamage(damage) {
