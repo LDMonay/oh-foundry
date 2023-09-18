@@ -1,0 +1,14 @@
+<form autocomplete="off">
+  {{#each compendiums as |compendium id|}}
+    <div class="form-group">
+      <label>{{compendium.label}}</label>
+      <select name="{{compendium.type}}">
+        {{selectOptions compendium.choices selected=compendium.current blank=""}}
+      </select>
+    </div>
+  {{/each}}
+  <div class="form-group">
+    <button type="submit"><i class="fas fa-save"></i>{{localize "SETTINGS.Save"}}</button>
+    <button type="button" data-action="reset"><i class="fas fa-undo"></i>{{localize "SETTINGS.Reset"}}</button>
+  </div>
+</form>
