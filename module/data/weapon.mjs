@@ -27,7 +27,7 @@ export class OHWeapon extends foundry.abstract.TypeDataModel {
             handedness: new fields.StringField({ initial: "", nullable: false }),
             properties: new fields.StringField({ initial: "", nullable: false }),
             range: new fields.NumberField({ label: "OH.Range" }),
-            powerCost: new fields.NumberField({ initial: 1, nullable: false }),
+            powerCost: new fields.NumberField({ initial: 0, nullable: false }),
         };
     }
 
