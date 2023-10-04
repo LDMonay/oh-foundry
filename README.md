@@ -10,8 +10,10 @@ A single actor type which is able to :
 -   Contain items types (which they can add, edit and remove from the sheet)
 -   Show an item summary in chat
 -   Show a summary of the unit's defenses in chat
--   Use weapon items and have their attack roll and damage roll displayed in chat.
+-   Use weapon items and have their attack roll and damage roll displayed in chat. Apply damage to units or target specific units to have their range penalties automatically calculated.
+-   Damage takes into account armor properly.
 -   Tally up a total point cost from all the items of the actor
+-   Settings for compendiums and critical damage behavior
 -   Use effects for buffs and such. (Pretty barebones)
 
 A number of item types :
@@ -20,25 +22,10 @@ A number of item types :
 -   Weapons, which have the ability to be used to shoot from the actor sheet.
 -   Armors, which may provide a number of defenses then displayed on the actor sheet.
 
-# What is currently broken
-
--   Armors are broken. I was trying to implement damage type constants but was unable to properly handle them.
--   Negative point values for items are not tallied up properly, don't think that always was the case, might have broken with v11.
--   On the actor sheet, textboxes that edit values in items.
-
 # Features I WANT to implement (high priority)
 
--   Finish damage types handling
--   Add a global setting which should allow choosing one of the three ways to handle crits in the system. (Unlimited, Limited, NoCrit)
--   Implement the Limited and NoCrit options to the damage calculation.
--   When shooting a weapon, if a token is targeted, the token's current 'AC' should be displayed in the chat template
--   When shooting a weapon, if a token is targeted, a second damage value taking into account the actor's armor against that weapon should be calculated and displayed.
--   When shooting a weapon, if a token is targeted, the number of range increments over the regular range should be taken into account for the attack calculation.
 -   Weapons should have an option to be reloaded to full, which would display a chat template.
--   Actor power should be reduced when using a weapon with power usage.
--   If a token is selected, we should be able to apply damage from an attack to that token (using a button in the chat template ?)
 -   Effects should be made into an item type, in order to allow them to be stored in a compendium.
--   A button to open a set of compendiums from the actor sheet.
 
 # Features I would like to implement (lower priority)
 
