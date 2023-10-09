@@ -4,7 +4,7 @@ const fields = foundry.data.fields;
  * Basic description data common to items
  */
 export const DescriptionTemplate = () => ({
-    description: new fields.StringField({ textSearch: true, blank: true, initial: "" }),
+    description: new fields.HTMLField({ textSearch: true, blank: true, initial: "" }),
     tags: new fields.StringField({ textSearch: true, blank: true, initial: "" }),
 });
 

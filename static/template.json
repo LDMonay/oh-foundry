@@ -3,6 +3,7 @@
         "types": ["unit"]
     },
     "Item": {
-        "types": ["weapon", "equipment", "ability", "skill", "armor"]
+        "types": ["weapon", "equipment", "ability", "skill", "armor"],
+        "htmlFields": ["description"]
     }
 }
