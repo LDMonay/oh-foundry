@@ -38,3 +38,5 @@ OUTERHEAVEN.armorTypes = {
     ...baseDamageTypes,
     all: "OH.DamageTypes.All",
 };
+
+OUTERHEAVEN.ACTIONS = {};

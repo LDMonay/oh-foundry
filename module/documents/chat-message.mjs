@@ -1,11 +1,12 @@
-import { WeaponAttack } from "../weapon-attack.mjs";
+import { OuterHeavenAction } from "../actions/action.mjs";
 
 export class OHChatMessage extends ChatMessage {
-    /** @type {WeaponAttack | undefined} */
-    get weaponAttack() {
-        if (this.flags.outerheaven?.type === "weaponAttack") {
-            this._weaponAttack ??= WeaponAttack.fromMessage(this);
-            return this._weaponAttack;
+    /** @type {OuterHeavenAction | undefined} */
+    get action() {
+        const actionType = this.flags.outerheaven?.actionType;
+        if (actionType && actionType in outerheaven.config.ACTIONS) {
+            this._action ??= outerheaven.config.ACTIONS[actionType].fromMessage(this);
+            return this._action;
         } else {
             return undefined;
         }

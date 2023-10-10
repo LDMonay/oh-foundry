@@ -5,7 +5,7 @@
   </header>
 
   {{!-- Attack Roll --}}
-  <div class="attack-details">
+  <div class="attack-details content-box">
     <div class="dice-roll">
       <div class="dice-result">
         <div class="dice-flavor">vs {{vsDefense}}</div>
@@ -16,7 +16,7 @@
   </div>
 
   {{!-- Ammo and Range info --}}
-  <div class="ammo-range flexcol">
+  <div class="ammo-range content-box flexcol">
     <div class="ammo">
       {{#if (or item.system.capacity.value item.system.capacity.max noAmmo)}}
         {{#if (eq item.system.weaponType "ranged")}}
@@ -36,7 +36,7 @@
   </div>
 
   {{!-- Damage Roll --}}
-  <div class="damage-details">
+  <div class="damage-details content-box">
     <div class="dice-roll">
       <div class="dice-result">
         <div class="dice-flavor">{{lookup config.damageTypes item.system.damageType}}</div>
@@ -47,7 +47,7 @@
   </div>
 
   {{!-- Attack Cost and Apply Damage button --}}
-  <div class="attack-costs flexrow">
+  <div class="attack-costs content-box flexrow">
     <div class="details flexcol">
       <span class="number-of-attacks">{{item.system.numberOfAttacks}} 
         {{#if (eq item.system.weaponType "ranged")}}{{localize "OH.Shots"}}{{else}}{{localize "OH.Strikes"}}{{/if}}
@@ -58,15 +58,15 @@
   </div>
 
   {{!-- Properties --}}
-  <div class="properties">
-    <span class="properties-header">{{localize "OH.Properties"}}</span><br>
+  <div class="properties content-box">
+    <header class="properties-header">{{localize "OH.Properties"}}</header>
     <span class="properties-content">{{item.system.properties}}</span>
   </div>
 
   {{!-- Targets --}}
   {{#if results}}
-    <div class="target-results flexcol">
-      <h4 class="target-header">{{localize "OH.Targets"}}</h4>
+    <div class="target-results content-box flexcol">
+      <header>{{localize "OH.Targets"}}</h4>
       {{#each results as |result index|}}
         <div class="target-result flexrow">
           {{!-- Target icon --}}

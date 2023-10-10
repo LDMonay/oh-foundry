@@ -1,4 +1,4 @@
-.characterSheet {
+.character-sheet {
     .vCenter {
         vertical-align: middle;
     }
@@ -52,5 +52,99 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+}
+
+.outerheaven.character-sheet {
+    .items {
+        .items-list {
+            padding: 0;
+            margin: 0.2em 0;
+        }
+
+        .items-list-header {
+            font-weight: bold;
+            padding: 0.25em;
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px groove rgba(0, 0, 0, 0.1);
+
+            .name {
+                margin-left: 5px;
+            }
+        }
+
+        // Using the same dimensions for header and item to keep them uniform
+        .items-list-header,
+        .item {
+            text-align: center;
+            padding: 0.2em 0;
+
+            &:nth-child(even) {
+                background: rgba(0, 0, 0, 0.05);
+            }
+
+            // Vertically center contained elements/text
+            > * {
+                align-self: center;
+            }
+
+            .name {
+                text-align: left;
+                flex: 1.1 0 4em;
+                > span {
+                    align-self: center;
+                }
+            }
+            .use {
+                flex: 0 0 24px;
+            }
+
+            .actions,
+            .attack-bonus {
+                flex: 0.1 0 2.5em;
+            }
+
+            .damage {
+                flex: 1.1 0 4em;
+            }
+
+            .ammo {
+                justify-content: center;
+                flex: 0.8 0 4em;
+                .reload {
+                    flex: 0 0 2em;
+                    .icon {
+                        border: none;
+                        border-radius: 0;
+                        max-width: 22px;
+                        &:hover {
+                            filter: drop-shadow(0 0 4px var(--color-shadow-primary));
+                        }
+                    }
+                }
+                input {
+                    flex: 0.6 1 1em;
+                    max-width: 3em;
+                }
+                .capacity-max {
+                    flex: 0.2 1 max-content;
+                    align-self: center;
+                }
+            }
+
+            .icon {
+                max-width: 24px;
+                max-height: 24px;
+                margin-right: 5px;
+            }
+        }
+
+        .item-controls {
+            flex: 0 0 3em;
+            margin-left: 5px;
+            > a {
+                margin-left: 5px;
+            }
+        }
     }
 }

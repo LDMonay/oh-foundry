@@ -44,44 +44,8 @@
     }
 }
 
-.outerheaven.weapon-attack {
-    display: grid;
-    grid-template-areas:
-        "header header"
-        "attack-details ammo-range"
-        "damage-details attack-costs"
-        "properties properties"
-        "target-results target-results";
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-    gap: 0.3em;
-
-    > .attack-details,
-    > .ammo-range,
-    > .damage-details,
-    > .attack-costs,
-    > .properties {
-        border-radius: 0.5em;
-        background: rgba(0, 0, 0, 0.1);
-        padding: 0.2em;
-
-        .dice-flavor,
-        .properties-header {
-            font-weight: bold;
-        }
-        .ammo,
-        .range,
-        .number-of-attacks,
-        .ap {
-            margin: 0.1em;
-
-            .ammo-empty {
-                font-weight: bold;
-                color: darkorange;
-            }
-        }
-    }
-
+.outerheaven {
+    // Common styling for card headers
     .card-header {
         grid-area: header;
         .item-name {
@@ -95,69 +59,121 @@
         }
     }
 
-    .attack-details {
-        grid-area: attack-details;
-    }
-    .ammo-range {
-        grid-area: ammo-range;
-        max-height: 47px;
-    }
-    .damage-details {
-        grid-area: damage-details;
-    }
-    .attack-costs {
-        grid-area: attack-costs;
-        max-height: 47px;
-        button {
-            max-width: 3em;
-            max-height: 3em;
-        }
-    }
-    .properties {
-        grid-area: properties;
-    }
-
-    .target-results {
-        grid-area: target-results;
+    // Common styling for info boxes marked by a bordered background
+    .content-box {
         border-radius: 0.5em;
         background: rgba(0, 0, 0, 0.1);
-        padding: 3px;
-        gap: 0.2em;
+        padding: 0.2em;
 
-        .target-header {
+        header {
             font-weight: bold;
             margin-bottom: 0;
         }
+    }
 
-        .target-result {
-            gap: 0.2em;
+    // Weapon reload
+    &.reload {
+        .reload-content {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+    }
 
-            // Add border between targets
-            &:not(:first-child) {
-                margin-top: 0.2em;
-                border-top: 1px groove rgba(0, 0, 0, 0.4);
-            }
+    // Weapon attack
+    &.weapon-attack {
+        display: grid;
+        grid-template-areas:
+            "header header"
+            "attack-details ammo-range"
+            "damage-details attack-costs"
+            "properties properties"
+            "target-results target-results";
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 0.3em;
 
-            .target-icon {
-                max-width: 32px;
-                max-height: 32px;
-                align-self: center;
-            }
-            .target-name {
+        .attack-details,
+        .ammo-range,
+        .damage-details,
+        .attack-costs,
+        .properties {
+            .dice-flavor {
                 font-weight: bold;
             }
-            .target-range {
-                text-align: right;
-            }
-            .target-rolls {
-                gap: 0.2em;
-            }
-            .target-attack {
-                .hit {
-                    color: #18520b;
+
+            .ammo,
+            .range,
+            .number-of-attacks,
+            .ap {
+                margin: 0.1em;
+
+                .ammo-empty {
+                    font-weight: bold;
+                    color: darkorange;
                 }
-                .miss {
-                    color: #aa0200;
+            }
+        }
+
+        .attack-details {
+            grid-area: attack-details;
+        }
+        .ammo-range {
+            grid-area: ammo-range;
+            max-height: 47px;
+        }
+        .damage-details {
+            grid-area: damage-details;
+        }
+        .attack-costs {
+            grid-area: attack-costs;
+            max-height: 47px;
+            button {
+                max-width: 3em;
+                max-height: 3em;
+            }
+        }
+        .properties {
+            grid-area: properties;
+        }
+
+        .target-results {
+            grid-area: target-results;
+
+            .target-result {
+                // Add border between targets
+                margin: 0.3em 0 0.3em 0;
+                border-top: 1px groove rgba(0, 0, 0, 0.4);
+                gap: 0.2em;
+
+                .target-icon {
+                    max-width: 32px;
+                    max-height: 32px;
+                    align-self: center;
+                }
+                .target-name {
+                    font-weight: bold;
+                }
+                .target-range {
+                    text-align: right;
+                }
+                .target-rolls {
+                    gap: 0.2em;
+                }
+                .target-attack {
+                    .hit {
+                        color: #18520b;
+                    }
+                    .miss {
+                        color: #aa0200;
+                    }
+                }
+                .target-damage {
+                    margin-top: unset;
+                }
+                .apply-damage {
+                    max-height: 32px;
+                    max-width: 32px;
+                    align-self: end;
                 }
             }
             .target-damage {

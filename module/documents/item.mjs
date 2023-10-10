@@ -1,8 +1,5 @@
-import { OUTERHEAVEN } from "../config.mjs";
-import { WeaponAttack } from "../weapon-attack.mjs";
-
 export class OHItem extends Item {
-    displayTemplate = {
+    static displayTemplate = {
         equipment: "systems/outerheaven/templates/chat/item-display.hbs",
         ability: "systems/outerheaven/templates/chat/item-display.hbs",
         armor: "systems/outerheaven/templates/chat/defense-display.hbs",
@@ -30,7 +27,7 @@ export class OHItem extends Item {
 
         // Retrieve roll data.
         const rollData = this.getRollData();
-        const rollContent = await renderTemplate(this.displayTemplate[this.type], rollData);
+        const rollContent = await renderTemplate(this.constructor.displayTemplate[this.type], rollData);
 
         ChatMessage.create({
             speaker: speaker,
@@ -49,6 +46,28 @@ export class OHItem extends Item {
      */
     async use(options = {}) {
         const { token, ...otherOptions } = options;
-        if (this.type === "weapon") return new WeaponAttack(token ?? this.actor, this).use(otherOptions);
+        if (this.type === "weapon")
+            return outerheaven.config.ACTIONS.attack.use({ actor: this.actor, ...otherOptions, item: this });
+    }
+
+    /**
+     * Whether this item can currently be reloaded.
+     *
+     * @type {boolean}
+     */
+    get canReload() {
+        if (this.type !== "weapon") return false;
+        if (this.system.capacity.max > 0 && this.system.capacity.value < this.system.capacity.max) return true;
+        return false;
+    }
+
+    /**
+     * Reload this item (if it is a weapon).
+     *
+     * @param {object} options - Options which configure how the item is reloaded. See {@link ItemReloadAction.use}.
+     * @returns {Promise<ChatMessage>} - The created chat message, if any.
+     */
+    async reload(options) {
+        return outerheaven.config.ACTIONS.reload.use({ actor: this.actor, ...options, item: this });
     }
 }
