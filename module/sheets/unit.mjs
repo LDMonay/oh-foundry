@@ -42,11 +42,11 @@ export class OHUnitSheet extends ActorSheet {
     _prepareItems(context) {
         // Initialize containers.
         const result = {
-            weapons: { label: "OH.Weapons", items: [], type: "weapon" },
-            defenses: { label: "OH.Defenses", items: [], type: "armor" },
-            items: { label: "OH.Equipment", items: [], type: "equipment" },
             abilities: { label: "OH.Abilities", items: [], type: "ability" },
+            defenses: { label: "OH.Defenses", items: [], type: "armor" },
+            equipments: { label: "OH.Equipment", items: [], type: "equipment" },
             skills: { label: "OH.Skills", items: [], type: "skill" },
+            weapons: { label: "OH.Weapons", items: [], type: "weapon" },
         };
 
         // Iterate through items, allocating to containers
