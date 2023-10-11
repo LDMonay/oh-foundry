@@ -69,9 +69,9 @@ export class OuterHeavenAction {
             (token instanceof Token ? token.document : token) ?? this.actor.token ?? this.actor.getActiveTokens()[0];
 
         this._messageFlags.outerheaven.actionType = this.constructor.ACTION_TYPE;
-        this._messageFlags.outerheaven.itemId = item.uuid;
-        this._messageFlags.outerheaven.actorId = actor.uuid;
-        this._messageFlags.outerheaven.tokenId = this.token.uuid;
+        this._messageFlags.outerheaven.itemId = this.item.uuid;
+        this._messageFlags.outerheaven.actorId = this.actor.uuid;
+        this._messageFlags.outerheaven.tokenId = this.token?.uuid;
     }
 
     /**
