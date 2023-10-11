@@ -66,11 +66,15 @@
         "Ammo": "Ammo",
         "NoAmmo": "No Ammo",
         "Uses": "Uses",
+        "ActionsToFire": "Actions to fire",
+        "WeaponReloaded": "Weapon has been reloaded.",
         "Range": "Range",
         "RangeModifier": "Range Modifier",
         "ArmorPenetration": "Armor Penetration",
         "TotalAP": "Total AP",
         "Damage": "Damage",
-        "Properties": "Properties"
+        "Properties": "Properties",
+
+        "Weapons": "Weapons"
     }
 }

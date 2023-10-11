@@ -4,12 +4,14 @@ import { onManageActiveEffect, prepareActiveEffectCategories } from "../effects.
 
 export class OHUnitSheet extends ActorSheet {
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
-            classes: ["sheet", "characterSheet"],
+        const options = super.defaultOptions;
+        return {
+            ...options,
+            classes: [...options.classes, "sheet", "character-sheet", "outerheaven"],
             template: `systems/outerheaven/templates/sheets/unit-sheet.hbs`,
-            width: 720,
+            width: 760,
             height: 680,
-        });
+        };
     }
 
     /** @override */
@@ -39,11 +41,13 @@ export class OHUnitSheet extends ActorSheet {
      */
     _prepareItems(context) {
         // Initialize containers.
-        const abilities = [];
-        const defenses = [];
-        const equipments = [];
-        const skills = [];
-        const weapons = [];
+        const result = {
+            weapons: { label: "OH.Weapons", items: [], type: "weapon" },
+            defenses: { label: "OH.Defenses", items: [], type: "armor" },
+            items: { label: "OH.Equipment", items: [], type: "equipment" },
+            abilities: { label: "OH.Abilities", items: [], type: "ability" },
+            skills: { label: "OH.Skills", items: [], type: "skill" },
+        };
 
         // Iterate through items, allocating to containers
         for (const i of context.items) {
@@ -52,35 +56,34 @@ export class OHUnitSheet extends ActorSheet {
 
             // Append to abilities.
             if (i.type === "ability") {
-                abilities.push(i);
+                result.abilities.items.push(i);
             }
             // Append to defenses.
             else if (i.type === "armor") {
                 i.armorBonusString = OHArmor.getArmorString(i.system.armorBonuses);
-                defenses.push(i);
+                result.defenses.items.push(i);
             }
             // Append to equipment.
             else if (i.type === "equipment") {
-                equipments.push(i);
+                result.equipments.items.push(i);
             }
             // Append to skills.
             else if (i.type === "skill") {
-                skills.push(i);
+                result.skills.items.push(i);
             }
             // Append to weapons.
             else if (i.type === "weapon") {
-                weapons.push(i);
+                result.weapons.items.push(i);
             }
         }
 
-        // Assign and return
-        context.abilities = abilities;
-        context.defenses = defenses;
-        context.equipments = equipments;
-        context.skills = skills;
-        context.weapons = weapons;
         // Prepare active effects
         context.effects = prepareActiveEffectCategories(this.actor.effects);
+
+        context.inventory = result;
+        for (const [k, v] of Object.entries(result)) {
+            context[k] = v.items;
+        }
     }
 
     /** @override */
@@ -118,7 +121,9 @@ export class OHUnitSheet extends ActorSheet {
         html.find(".displayDefenses").click(this._onDisplayDefenses.bind(this));
 
         // Use weapon
-        html.find(".useWeapon").click(this._onUseWeapon.bind(this));
+        html.find(".use-weapon").click(this._onUseWeapon.bind(this));
+
+        html.find(".ammo .reload").click(this._onReloadWeapon.bind(this));
 
         // Active Effect management
         html.find(".effect-control").click((ev) => onManageActiveEffect(ev, this.actor));
@@ -192,5 +197,11 @@ export class OHUnitSheet extends ActorSheet {
         const li = $(event.currentTarget).parents(".item");
         const item = this.actor.items.get(li.data("itemId"));
         item.use({ token: this.token });
+    }
+
+    _onReloadWeapon(event) {
+        const li = $(event.currentTarget).parents(".item");
+        const item = this.actor.items.get(li.data("itemId"));
+        item.reload({ token: this.token });
     }
 }

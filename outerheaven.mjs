@@ -9,17 +9,18 @@ import * as dataModels from "./module/data/_module.mjs";
 import * as sheets from "./module/sheets/_module.mjs";
 import * as utils from "./module/utils.mjs";
 import * as dice from "./module/dice/_module.mjs";
+import * as actions from "./module/actions/_module.mjs";
 import { registerSettings } from "./module/settings.mjs";
-import { WeaponAttack } from "./module/weapon-attack.mjs";
 
 // API
-// TODO: Determine actually desired API
+export { actions, OUTERHEAVEN as config, dataModels, dice, documents, sheets };
 globalThis.outerheaven = {
-    documents,
+    actions,
+    config: OUTERHEAVEN,
     dataModels,
     dice,
+    documents,
     sheets,
-    WeaponAttack,
 };
 
 Hooks.once("init", function () {
@@ -81,7 +82,7 @@ Hooks.on("renderChatLog", (app, html, data) => {
     html.on("click", "button.apply-damage", (event) => {
         const message = game.messages.get(event.currentTarget.closest(".message").dataset.messageId);
         const targetId = event.currentTarget.dataset.targetId;
-        message.weaponAttack.applyTargetDamage(targetId);
+        message.action.applyTargetDamage(targetId);
     });
 });
 

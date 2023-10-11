@@ -1,129 +1,13 @@
-import { OUTERHEAVEN } from "./config.mjs";
-import { DamageRoll } from "./dice/damage-roll.mjs";
-import { OHActor } from "./documents/actor.mjs";
-import { OHChatMessage } from "./documents/chat-message.mjs";
-import { OHItem } from "./documents/item.mjs";
+import { OUTERHEAVEN } from "../config.mjs";
+import { DamageRoll } from "../dice/damage-roll.mjs";
+import { OHActor } from "../documents/actor.mjs";
+import { OuterHeavenAction } from "./action.mjs";
 
-export class WeaponAttack {
-    /**
-     * The actor performing the attack.
-     *
-     * @type {OHActor}
-     */
-    actor;
+export class AttackAction extends OuterHeavenAction {
+    static ACTION_TYPE = "attack";
+    static TEMPLATE = "systems/outerheaven/templates/chat/weapon-attack.hbs";
 
-    /**
-     * The specific token of the actor performing the attack.
-     *
-     * @type {TokenDocument}
-     */
-    token;
-
-    /**
-     * The weapon being used to perform the attack.
-     *
-     * @type {OHItem}
-     */
-    item;
-
-    /**
-     * An array of targets of the attack.
-     *
-     * @type {TokenDocument[]}
-     */
-    targets;
-
-    /**
-     * The attack {@link Roll roll} for this weapon attack.
-     *
-     * @type {Roll}
-     */
-    attackRoll;
-
-    /**
-     * The damage {@link DamageRoll roll} for this weapon attack.
-     *
-     * @type {DamageRoll}
-     */
-    damageRoll;
-
-    /**
-     * The results of the attack, keyed by target UUID.
-     *
-     * @type {foundry.utils.Collection<AttackResult>}
-     */
-    results = new foundry.utils.Collection();
-
-    /**
-     * Data the actor needs to be updated with after the attack.
-     *
-     * @type {{ [path: string]: unknown }}
-     */
-    actorUpdate = {};
-
-    /**
-     * Data the item needs to be updated with after the attack.
-     *
-     * @type {{ [path: string]: unknown }[]}
-     */
-    itemUpdates = [];
-
-    /**
-     * A convenience accessor for the item update of the item used in the attack.
-     *
-     * @type {{ [path: string]: unknown }}
-     */
-    get itemUpdate() {
-        let itemUpdate = this.itemUpdates.find((update) => update._id === this.item.id);
-        if (!itemUpdate) {
-            itemUpdate = { _id: this.item.id };
-            this.itemUpdates.push(itemUpdate);
-        }
-        return itemUpdate;
-    }
-
-    /**
-     * Flags that will be added to the chat message.
-     * @type {object}
-     */
-    _messageFlags = { outerheaven: { type: "weaponAttack" } };
-
-    /**
-     * Additional data used to render the chat message.
-     *
-     * @type {{ [key: string]: unknown }}
-     */
-    _renderData = {};
-
-    /**
-     * @param {OHActor | TokenDocument} actor - The actor performing the attack.
-     * @param {OHItem} item - The weapon being used to perform the attack.
-     */
-    constructor(actor, item) {
-        if (actor instanceof TokenDocument) {
-            this.token = actor;
-            this.actor = actor.actor;
-        } else if (actor instanceof Actor) {
-            this.actor = actor;
-            // Use either the token in case of unlinked actors, or fall back to first token for linked ones
-            this.token = actor.token ?? actor.getActiveTokens()[0];
-        } else {
-            throw new Error("Invalid actor provided.");
-        }
-
-        this.item = item;
-
-        // Store UUIDs of involved documents in the chat message flags to allow the attack to be reconstructed later.
-        this._messageFlags.outerheaven.actorId = this.actor.uuid;
-        this._messageFlags.outerheaven.itemId = this.item.uuid;
-    }
-
-    /**
-     * Reconstruct a weapon attack from a chat message.
-     *
-     * @param {ChatMessage} message - The chat message to reconstruct the attack from.
-     * @returns {WeaponAttack} The reconstructed weapon attack.
-     */
+    /** @override */
     static fromMessage(message) {
         let actor, item;
         const { itemId, results } = message.flags.outerheaven ?? {};
@@ -133,47 +17,15 @@ export class WeaponAttack {
             actor = item.actor;
         }
 
-        const weaponAttack = new this(actor, item);
-        weaponAttack.attackRoll = message.rolls[0];
-        weaponAttack.damageRoll = message.rolls[1];
-        weaponAttack.results = new foundry.utils.Collection(results.map((result) => [result._id, result]));
-        weaponAttack.targets = results.map((result) => fromUuidSync(result._id));
-        weaponAttack._messageFlags = message.flags;
+        const action = new this({ actor, item });
 
-        return weaponAttack;
-    }
+        action.attackRoll = message.rolls[0];
+        action.damageRoll = message.rolls[1];
+        action.results = new foundry.utils.Collection(results.map((result) => [result._id, result]));
+        action.targets = results.map((result) => fromUuidSync(result._id));
+        action._messageFlags = message.flags;
 
-    /**
-     * Roll this weapon attack.
-     *
-     * @param {object} [options={}] - Options for how the attack is rolled.
-     * @param {boolean} [options.chatMessage=true] - Whether to create a chat message for the attack.
-     * @param {boolean} [options.updateDocuments=true] - Whether to update involved documents after the attack.
-     * @returns {Promise<WeaponAttack>} The rolled weapon attack.
-     */
-    async use({ chatMessage = true, updateDocuments = true, chatMessageOptions = {} } = {}) {
-        this.targets = await this._acquireTargets();
-
-        this.attackRoll = await this._rollAttack();
-        this.damageRoll = await this._rollDamage();
-
-        for (const target of this.targets) {
-            this.results.set(target.uuid, this._evaluateResult(target));
-        }
-
-        // Set flag when using weapon without remaining ammo.
-        if (this.item.system.capacity.value === 0) this._renderData.noAmmo = true;
-
-        // Update involved documents.
-        if (updateDocuments) {
-            await this._updateItems();
-            await this._updateActor();
-        }
-
-        // Create chat message.
-        if (chatMessage) this.chatMessage = await this.toMessage(chatMessageOptions);
-
-        return this;
+        return action;
     }
 
     /**
@@ -186,6 +38,35 @@ export class WeaponAttack {
      */
     async _acquireTargets() {
         return Array.from(game.user.targets).map((token) => token.document);
+    }
+
+    /** @override */
+    async _use(options) {
+        /**
+         * An array of targets of the attack.
+         *
+         * @type {TokenDocument[]}
+         */
+        this.targets = await this._acquireTargets();
+
+        // Create and evaluate rolls
+        this.attackRoll = await this._rollAttack();
+        this.damageRoll = await this._rollDamage();
+
+        for (const target of this.targets) {
+            this.results.set(target.uuid, this._evaluateResult(target));
+        }
+
+        // Set flag when using weapon without remaining ammo.
+        if (this.item.system.capacity.value === 0) this._renderData.noAmmo = true;
+
+        // Add usage costs to update data
+        if (this.item.system.powerCost > 0) {
+            this.actorUpdate["system.power.value"] = this.actor.system.power.value - this.item.system.powerCost;
+        }
+        if (this.item.system.capacity.value > 0) {
+            this.itemUpdate["system.capacity.value"] = this.item.system.capacity.value - 1;
+        }
     }
 
     /**
@@ -297,47 +178,9 @@ export class WeaponAttack {
         return result;
     }
 
-    /**
-     * Update the actor belonging to this weapon attack with the changes required by the attack,
-     * e.g. reducing power.
-     *
-     * @returns {Promise<OHActor>}
-     * @private
-     */
-    async _updateActor() {
-        if (this.item.system.powerCost > 0) {
-            this.actorUpdate["system.power.value"] = this.actor.system.power.value - this.item.system.powerCost;
-        }
-        if (!foundry.utils.isEmpty(this.actorUpdate)) return this.actor.update(this.actorUpdate);
-    }
-
-    /**
-     * Updates items whose properties were affected by the attack.
-     *
-     * @returns {Promise<OHItem[]>}
-     * @private
-     */
-    async _updateItems() {
-        if (this.item.system.capacity.value > 0) {
-            this.itemUpdate["system.capacity.value"] = this.item.system.capacity.value - 1;
-        }
-        if (this.itemUpdates.length) return this.actor.updateEmbeddedDocuments("Item", this.itemUpdates);
-    }
-
-    /**
-     * Render the weapon attack as a chat message.
-     *
-     * @param {object} [options={}] - Options for how the message is created.
-     * @param {string} [options.rollMode] - The roll mode to use for the message.
-     * @param {boolean} [options.temporary] - Whether to create a temporary message.
-     * @returns {Promise<OHChatMessage>}
-     */
-    async toMessage({ temporary = false, rollMode, ...options } = {}) {
-        const speaker = ChatMessage.getSpeaker({ actor: this.actor, token: this.token });
-        rollMode ??= game.settings.get("core", "rollMode");
-        temporary ??= false;
-
-        const renderData = { actor: this.actor, item: this.item, config: OUTERHEAVEN, ...this._renderData };
+    /** @override */
+    async toMessage(options = {}) {
+        const renderData = this._renderData;
 
         // Add rolls and their tooltips
         renderData.atkRoll = this.attackRoll;
@@ -358,22 +201,15 @@ export class WeaponAttack {
             };
         });
 
-        const content = await renderTemplate("systems/outerheaven/templates/chat/weapon-attack.hbs", renderData);
+        this.ohFlags.results = this.results;
+        this.ohFlags.numberOfAttacks = this.item.system.numberOfAttacks;
+        this.ohFlags.armorPenetration = this.item.system.armorPenetration;
 
-        const chatData = {
-            flags: this._messageFlags,
-            speaker: speaker,
-            content: content,
-            rolls: [this.attackRoll, this.damageRoll],
-            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-            rollMode: rollMode,
-        };
-        chatData.flags.outerheaven.results = this.results;
-        chatData.flags.outerheaven.numberOfAttacks = this.item.system.numberOfAttacks;
-        chatData.flags.outerheaven.armorPenetration = this.item.system.armorPenetration;
-        return temporary
-            ? new ChatMessage.implementation(chatData)
-            : ChatMessage.create(chatData, { ...options, rollMode });
+        options.chatData ??= {};
+        options.chatData.rolls = [this.attackRoll, this.damageRoll];
+        options.chatData.type = CONST.CHAT_MESSAGE_TYPES.ROLL;
+
+        return super.toMessage(options);
     }
 
     /**
@@ -400,6 +236,8 @@ export class WeaponAttack {
         return actor.applyDamage({ total: result.damage.total, type: this.damageRoll.damageType, isFinal: true });
     }
 }
+
+OUTERHEAVEN.ACTIONS[AttackAction.ACTION_TYPE] = AttackAction;
 
 /**
  * @typedef {object} AttackResult

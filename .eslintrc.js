@@ -487,5 +487,6 @@ module.exports = {
         GlowOverlayFilter: "readonly",
         OutlineOverlayFilter: "readonly",
         SearchFilter: "readonly",
+        outerheaven: "readonly",
     },
 };
