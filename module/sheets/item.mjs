@@ -43,20 +43,29 @@ export class OHItemSheet extends ItemSheet {
     }
 
     /** @override */
-    getData() {
+    async getData() {
         // Retrieve base data structure.
         const context = super.getData();
+        const item = (context.item = this.item);
+        const rollData = item.getRollData();
 
         context.config = CONFIG.OUTERHEAVEN;
 
-        if (this.type === "armor") {
+        if (item.type === "armor") {
             context.armorTypes = { ...CONFIG.OUTERHEAVEN.damageTypes };
             context.armorTypes.true = "All";
         }
 
         // Add the actor's data to context.data for easier access, as well as flags.
-        context.system = this.item.system;
-        context.flags = this.item.flags;
+        context.system = item.system;
+        context.flags = item.flags;
+
+        context.description = await TextEditor.enrichHTML(item.system.description, {
+            rollData,
+            secrets: item.isOwner,
+            async: true,
+            relativeTo: item,
+        });
 
         return context;
     }
