@@ -27,6 +27,11 @@ export class OHItem extends Item {
 
         // Retrieve roll data.
         const rollData = this.getRollData();
+        rollData.description = await TextEditor.enrichHTML(this.system.description, {
+            rollData,
+            relativeTo: this.actor,
+            async: true,
+        });
         const rollContent = await renderTemplate(this.constructor.displayTemplate[this.type], rollData);
 
         ChatMessage.create({

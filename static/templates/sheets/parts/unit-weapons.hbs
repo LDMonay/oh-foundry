@@ -1,6 +1,6 @@
 <section class="items weapons flexcol">
   {{!-- Header row, mirroring the contents of an item list element --}}
-  <header class="items-list-header flexrow">
+  <header class="item-list-header flexrow">
     <div class="name">{{localize inventory.weapons.label}}</div>
     <div class="use"></div>
     <div class="actions">ATF</div>
@@ -13,7 +13,7 @@
     </div>
   </header>
 
-  <ol class="items-list">
+  <ol class="item-list">
     {{#each inventory.weapons.items as |item id|}}
       {{!-- Each individual item's list element --}}
       <li class="item flexrow" data-item-id="{{item._id}}">
