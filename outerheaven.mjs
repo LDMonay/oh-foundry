@@ -23,6 +23,10 @@ globalThis.outerheaven = {
     sheets,
 };
 
+if (import.meta.env.DEV) {
+    await import("./module/tests/index.mjs");
+}
+
 Hooks.once("init", function () {
     console.log("Outer Heaven | Initializing the battlefield...");
 
