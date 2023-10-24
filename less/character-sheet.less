@@ -56,45 +56,21 @@
 }
 
 .outerheaven.character-sheet {
+    .form-item {
+        width: 100%;
+        min-height: 36px;
+        label {
+            flex: 0 0 4em;
+        }
+    }
+
+    .stance {
+        align-self: normal;
+    }
+
     .items {
-        .item-list {
-            padding: 0;
-            margin: 0.2em 0;
-        }
-
-        .item-list-header {
-            font-weight: bold;
-            padding: 0.25em;
-            background: rgba(0, 0, 0, 0.1);
-            border: 1px groove rgba(0, 0, 0, 0.1);
-
-            .name {
-                margin-left: 5px;
-            }
-        }
-
-        // Using the same dimensions for header and item to keep them uniform
         .item-list-header,
         .item {
-            text-align: center;
-            padding: 0.2em 0;
-
-            &:nth-child(even) {
-                background: rgba(0, 0, 0, 0.05);
-            }
-
-            // Vertically center contained elements/text
-            > * {
-                align-self: center;
-            }
-
-            .name {
-                text-align: left;
-                flex: 1.1 0 4em;
-                > span {
-                    align-self: center;
-                }
-            }
             .use {
                 flex: 0 0 24px;
             }
@@ -130,20 +106,6 @@
                     flex: 0.2 1 max-content;
                     align-self: center;
                 }
-            }
-
-            .icon {
-                max-width: 24px;
-                max-height: 24px;
-                margin-right: 5px;
-            }
-        }
-
-        .item-controls {
-            flex: 0 0 3em;
-            margin-left: 5px;
-            > a {
-                margin-left: 5px;
             }
         }
     }

@@ -18,6 +18,7 @@ export class OHUnitSheet extends ActorSheet {
     getData() {
         // Retrieve base data structure.
         const context = super.getData();
+        const sourceData = this.actor.toObject();
 
         context.config = CONFIG.OUTERHEAVEN;
 
@@ -26,6 +27,14 @@ export class OHUnitSheet extends ActorSheet {
 
         // Add roll data for TinyMCE editors.
         context.rollData = context.actor.getRollData();
+
+        const stanceEntries = [...this.actor.allApplicableEffects()]
+            .filter((effect) => effect.system.type === "stance")
+            .map((effect) => [effect.getRelativeUUID(null, { toActor: true }), effect.name]);
+        context.stances = Object.fromEntries(stanceEntries);
+        context.stance = sourceData.system.stance ?? "";
+
+        context.form = this.actor.items.find((item) => item.type === "form");
 
         // Prepare items
         this._prepareItems(context);

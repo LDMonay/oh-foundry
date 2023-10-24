@@ -7,6 +7,14 @@ export class OHItem extends Item {
         weapon: "systems/outerheaven/templates/chat/weapon-display.hbs",
     };
 
+    /** @override */
+    async _preCreate(data, options, user) {
+        await super._preCreate(data, options, user);
+
+        // Prevent the creation of `form` type items if the actor already has one.
+        if (this.type === "form" && this.actor?.form) return false;
+    }
+
     /**
      * Prepare a data object which is passed to any Roll formulas which are created related to this Item
      */

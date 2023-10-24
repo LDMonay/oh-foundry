@@ -3,40 +3,48 @@
         <img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64" />
         <h1><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
     </header>
-    <div>
-        <div class="itemSection">
-            <a class="armorBonus-create" title="New"><i class="fas fa-plus"></i> New Armor Bonus</a>
-            <table class="item-list">
-                {{#each system.armorBonuses as |item id|}}
-                    <tr class="item" data-index={{id}}>
-                        <td>
-                            <input
-                                class="mediumInput"
-                                type="text"
-                                name="system.armorBonuses.{{id}}.value"
-                                value="{{item.value}}"
-                                data-dtype="Number"
-                            />
-                            <select name="system.armorBonuses.{{id}}.armorType">
-                                {{selectOptions @root.config.armorTypes selected=item.armorType localize=true}}
-                            </select>
-                        </td>
-                        <td>
-                            <a
-                                class="armorBonus-delete"
-                                data-value="{{item.value}}"
-                                data-type="{{item.armorType}}"
-                                title="Delete"
-                            ><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
-                {{/each}}
-            </table>
-        </div>
-        <div class="itemSection">
+
+    {{!-- Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="main" aria-role="Form Tab Navigation">
+      <a class="item" data-tab="details">{{localize "OH.Details"}}</a>
+      <a class="item" data-tab="effects">{{localize "OH.Effects"}}</a>
+    </nav>
+
+  {{!-- Tab content --}}
+  <section class="content">
+    {{!-- Details tab --}}
+    <div class="tab" data-group="main" data-tab="details">
+      <div class="flexrow">
+        {{!-- Benefits --}}
+        <div class="itemSection benefits">
             Benefits
             <textarea name="system.benefitsDescription">{{system.benefitsDescription}}</textarea>
         </div>
+
+        {{!-- Armor bonuses --}}
+        <div class="itemSection armor-bonuses">
+            <a class="armorBonus-create" title="New"><i class="fas fa-plus"></i> New Armor Bonus</a>
+            <ul class="item-list">
+                {{#each system.armorBonuses as |item id|}}
+                    <li class="item flexrow" data-index={{id}}>
+                        <input
+                            class="mediumInput"
+                            type="number"
+                            name="system.armorBonuses.{{id}}.value"
+                            value="{{item.value}}"
+                        />
+                        <select name="system.armorBonuses.{{id}}.armorType">
+                            {{selectOptions @root.config.armorTypes selected=item.armorType localize=true}}
+                        </select>
+                        <div class="item-controls">
+                            <a class="armorBonus-delete" title="Delete"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+      </div>
+
         <hr />
         <div class="itemSection">
             {{editor description target="system.description" button=true engine="prosemirror" owner=owner editable=editable}}
@@ -60,4 +68,10 @@
             </p>
         </div>
     </div>
+
+    {{!-- Effects tab --}}
+    <div class="tab" data-group="main" data-tab="effects">
+      {{>"oh.item-effects"}}
+    </div>
+  </section>
 </form>

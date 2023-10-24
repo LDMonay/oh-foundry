@@ -5,7 +5,8 @@
             "armor": "Armor",
             "equipment": "Equipment",
             "skill": "Skill",
-            "weapon": "Weapon"
+            "weapon": "Weapon",
+            "form": "Form"
         },
         "Actor": {
             "unit": "Unit"
@@ -60,6 +61,26 @@
             "Ranged": "Ranged"
         },
 
+        "Effects": "Effects",
+        "EffectType": "Effect Type",
+        "EffectTypes": {
+            "Stance": "Stance",
+            "Template": "Template",
+            "Hint": "Types the system attaches special behavior to."
+        },
+
+        "Create": "Create",
+        "OpenCompendium": "Open Compendium",
+        "Edit": "Edit",
+        "Delete": "Delete",
+        "Details": "Details",
+
+        "Grit": "Grit",
+        "Awareness": "Awareness",
+        "Morale": "Morale",
+
+        "Stance": "Stance",
+
         "Targets": "Targets",
         "Shots": "Shots",
         "Strikes": "Strikes",
@@ -67,6 +88,8 @@
         "NoAmmo": "No Ammo",
         "Uses": "Uses",
         "ActionsToFire": "Actions to fire",
+        "Attack": "Attack",
+        "Reload": "Reload",
         "WeaponReloaded": "Weapon has been reloaded.",
         "Range": "Range",
         "RangeModifier": "Range Modifier",
