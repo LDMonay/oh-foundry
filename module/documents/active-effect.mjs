@@ -18,7 +18,7 @@ export class OHActiveEffect extends ActiveEffect {
     get isSuppressed() {
         // Only the currently chosen stance is active and applied
         if (this.system.type === "stance") {
-            return this.actor.system.stance !== this;
+            return this.actor?.system.stance !== this;
         }
         return false;
     }
