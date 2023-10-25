@@ -87,7 +87,10 @@
         "Ammo": "Ammo",
         "NoAmmo": "No Ammo",
         "Uses": "Uses",
+        "Actions": "Actions",
         "ActionsToFire": "Actions to fire",
+        "Max": "Max",
+        "PowerCost": "Power Cost",
         "Attack": "Attack",
         "Reload": "Reload",
         "WeaponReloaded": "Weapon has been reloaded.",
@@ -96,8 +99,14 @@
         "ArmorPenetration": "Armor Penetration",
         "TotalAP": "Total AP",
         "Damage": "Damage",
+        "Benefits": "Benefits",
         "Properties": "Properties",
 
-        "Weapons": "Weapons"
+        "Defenses": "Defenses",
+        "Armor": "Armor",
+        "Weapons": "Weapons",
+        "Equipment": "Equipment",
+        "Skills": "Skills",
+        "Abilities": "Abilities"
     }
 }

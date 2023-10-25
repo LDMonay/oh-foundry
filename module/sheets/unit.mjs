@@ -1,5 +1,6 @@
 import { SYSTEM_ID } from "../const.mjs";
 import { OHArmor } from "../data/armor.mjs";
+import { OHItem } from "../documents/item.mjs";
 import { onManageActiveEffect, prepareActiveEffectCategories } from "../effects.mjs";
 
 export class OHUnitSheet extends ActorSheet {
@@ -15,84 +16,79 @@ export class OHUnitSheet extends ActorSheet {
     }
 
     /** @override */
-    getData() {
+    async getData(options) {
         // Retrieve base data structure.
-        const context = super.getData();
-        const sourceData = this.actor.toObject();
+        const context = await DocumentSheet.prototype.getData.call(this, options);
+        const actor = (context.actor = context.document);
+        const source = actor.toObject();
 
         context.config = CONFIG.OUTERHEAVEN;
 
-        // Add the actor's data to context.data for easier access, as well as flags.
-        context.system = context.actor.system;
+        // Add the actor's system data to enable matching `name` and `value` props
+        context.system = actor.system;
 
-        // Add roll data for TinyMCE editors.
-        context.rollData = context.actor.getRollData();
-
-        const stanceEntries = [...this.actor.allApplicableEffects()]
+        const stanceEntries = [...actor.allApplicableEffects()]
             .filter((effect) => effect.system.type === "stance")
             .map((effect) => [effect.getRelativeUUID(null, { toActor: true }), effect.name]);
         context.stances = Object.fromEntries(stanceEntries);
-        context.stance = sourceData.system.stance ?? "";
+        context.stance = source.system.stance ?? "";
 
-        context.form = this.actor.items.find((item) => item.type === "form");
-
-        // Prepare items
-        this._prepareItems(context);
+        // Prepare embedded documents
+        context.items = this._prepareItems(actor.items);
+        context.effects = prepareActiveEffectCategories(actor.effects);
+        context.form = actor.items.find((item) => item.type === "form");
 
         return context;
     }
 
     /**
-     * Organize and classify Items for Character sheets.
+     * Organize items into sections.
      *
-     * @param {Object} actorData The actor to prepare.
-     * @return {undefined}
+     * @protected
+     * @param {OHItem[]} items - The items to prepare.
+     * @returns {Record<string, { label: string, items: object[], type: string }>} An object containing item secions.
      */
-    _prepareItems(context) {
+    _prepareItems(items) {
         // Initialize containers.
         const result = {
             abilities: { label: "OH.Abilities", items: [], type: "ability" },
             defenses: { label: "OH.Defenses", items: [], type: "armor" },
-            equipments: { label: "OH.Equipment", items: [], type: "equipment" },
+            equipment: { label: "OH.Equipment", items: [], type: "equipment" },
             skills: { label: "OH.Skills", items: [], type: "skill" },
             weapons: { label: "OH.Weapons", items: [], type: "weapon" },
         };
 
-        // Iterate through items, allocating to containers
-        for (const i of context.items) {
-            i.img = i.img || DEFAULT_TOKEN;
-            i.document = context.actor.items.get(i._id);
-
-            // Append to abilities.
-            if (i.type === "ability") {
-                result.abilities.items.push(i);
-            }
-            // Append to defenses.
-            else if (i.type === "armor") {
-                i.armorBonusString = OHArmor.getArmorString(i.system.armorBonuses);
-                result.defenses.items.push(i);
-            }
-            // Append to equipment.
-            else if (i.type === "equipment") {
-                result.equipments.items.push(i);
-            }
-            // Append to skills.
-            else if (i.type === "skill") {
-                result.skills.items.push(i);
-            }
-            // Append to weapons.
-            else if (i.type === "weapon") {
-                result.weapons.items.push(i);
+        for (const item of items) {
+            const i = { id: item.id, name: item.name, img: item.img, system: item.system, document: item };
+            switch (item.type) {
+                case "ability": {
+                    result.abilities.items.push(i);
+                    break;
+                }
+                case "armor": {
+                    i.armorBonusString = OHArmor.getArmorString(i.system.armorBonuses);
+                    result.defenses.items.push(i);
+                    break;
+                }
+                case "equipment": {
+                    result.equipment.items.push(i);
+                    break;
+                }
+                case "skill": {
+                    result.skills.items.push(i);
+                    break;
+                }
+                case "weapon": {
+                    i.attackBonus = item.system.attackBonus;
+                    if (item.system.weaponType === "ranged") i.attackBonus += this.actor.system.aim;
+                    else if (item.system.weaponType === "melee") i.attackBonus += this.actor.system.melee;
+                    result.weapons.items.push(i);
+                    break;
+                }
             }
         }
 
-        // Prepare active effects
-        context.effects = prepareActiveEffectCategories(this.actor.effects);
-
-        context.inventory = result;
-        for (const [k, v] of Object.entries(result)) {
-            context[k] = v.items;
-        }
+        return result;
     }
 
     /** @override */
