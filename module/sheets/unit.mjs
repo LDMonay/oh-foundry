@@ -34,7 +34,7 @@ export class OHUnitSheet extends ActorSheet {
         context.stance = source.system.stance ?? "";
 
         // Prepare embedded documents
-        context.items = this._prepareItems(actor.items);
+        context.items = this._prepareItems(actor.items.contents);
         context.effects = prepareActiveEffectCategories(actor.effects);
         context.form = actor.items.find((item) => item.type === "form");
 
@@ -57,6 +57,9 @@ export class OHUnitSheet extends ActorSheet {
             skills: { label: "OH.Skills", items: [], type: "skill" },
             weapons: { label: "OH.Weapons", items: [], type: "weapon" },
         };
+
+        // Sort items by their stored sort order
+        items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
 
         for (const item of items) {
             const i = { id: item.id, name: item.name, img: item.img, system: item.system, document: item };
