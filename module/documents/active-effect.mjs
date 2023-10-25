@@ -1,3 +1,4 @@
+import { setProperty } from "../../common/utils/helpers.mjs";
 import { ActiveEffectModel } from "../data/active-effect.mjs";
 
 export class OHActiveEffect extends ActiveEffect {
@@ -24,16 +25,22 @@ export class OHActiveEffect extends ActiveEffect {
     }
 
     /** @override */
-    _initialize(options) {
-        // TODO: Properly sort order in data preparation
-        this.system.updateSource(this._source?.flags?.outerheaven ?? {});
-        super._initialize(options);
+    async _preUpdate(data, options, userId) {
+        // Clean and validate `flags.outerheaven` before updating
+        // HACK: This sneaks DataModel validation into the update process, outside of the normal DataModel handling,
+        //       which is necessary because ActiveEffects do not allow for a `system` space, so we have to use `flags`.
+        if (hasProperty(data, "flags.outerheaven")) {
+            setProperty(data, "flags.outerheaven", this.system.updateSource(data.flags.outerheaven, { dryRun: true }));
+        }
+        return super._preUpdate(data, options, userId);
     }
 
     /** @override */
-    _configure(options) {
-        super._configure(options);
-        this.system = new ActiveEffectModel(this._source.flags?.outerheaven ?? {}, { parent: this });
+    prepareBaseData() {
+        super.prepareBaseData();
+        // HACK: This sneaks DataModel initialization into the document lifecyle, although _not_ at the usual time;
+        //       this is necessary as ActiveEffects do not allow for a `system` space, so we have to use `flags`.
+        this.system = new ActiveEffectModel(this.flags.outerheaven ?? {}, { parent: this, strict: false });
     }
 
     /** @override */

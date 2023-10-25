@@ -9,6 +9,7 @@ export class OHItemSheet extends ItemSheet {
             ...options,
             classes: [...options.classes, "outerheaven", "sheet", "item-sheet"],
             tabs: [{ navSelector: ".tabs", contentSelector: ".content" }],
+            dragDrop: [{ dragSelector: ".effect-list .effect", dropSelector: null }],
             width: 520,
             height: 480,
         };
@@ -28,6 +29,45 @@ export class OHItemSheet extends ItemSheet {
         html.find(".armorBonus-delete").click(this._onArmorBonusDelete.bind(this));
 
         html.find(".item-controls a").click(this._onControls.bind(this));
+    }
+
+    /** @override */
+    _canDragDrop(selector) {
+        // Allow dragDrop not only for GMs
+        return this.isEditable;
+    }
+
+    /**
+     * Handle drag events to allow dragging of ActiveEffects
+     *
+     * @override
+     * @param {DragEvent} event
+     */
+    _onDragStart(event) {
+        const li = event.currentTarget;
+        if (li.dataset.effectId) {
+            const effect = this.item.effects.get(li.dataset.effectId);
+            event.dataTransfer.setData("text/plain", JSON.stringify(effect.toDragData()));
+        }
+
+        return super._onDragStart(event);
+    }
+
+    /**
+     * Handle drop events.
+     * Add capability to drop ActiveEffects onto item sheets.
+     *
+     * @override
+     * @param {DragEvent} event
+     */
+    async _onDrop(event) {
+        const data = TextEditor.getDragEventData(event);
+        if (data.type === "ActiveEffect") {
+            const effect = await ActiveEffect.implementation.fromDropData(data);
+            // Prevent dropping of effects into the same sheet; duplication could be added separately
+            if (this.item.uuid === effect.parent?.uuid) return false;
+            return this.item.createEmbeddedDocuments("ActiveEffect", [effect.toObject()]);
+        }
     }
 
     async _onArmorBonusCreate(event) {
@@ -55,7 +95,7 @@ export class OHItemSheet extends ItemSheet {
         // What action to perform
         const action = a.dataset.action;
         // ID of the targeted document
-        const docId = a.closest(".item")?.dataset.id;
+        const docId = a.closest(".effect")?.dataset.effectId;
         // Document itself; only for edit and delete
         const effect = docId ? this.item.effects.get(docId) : null;
 

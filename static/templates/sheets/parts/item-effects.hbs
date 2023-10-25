@@ -8,7 +8,7 @@
 
     <ol class="effect-list">
         {{#each activeEffects as |effect id|}}
-            <li class="item effect flexrow" data-id="{{effect._id}}">
+            <li class="effect flexrow" data-effect-id="{{effect._id}}">
                 <img src="{{effect.img}}" alt="{{effect.name}}" class="icon" />
                 <span class="name">{{effect.name}}</span>
                 <div class="item-controls" data-type="ActiveEffect">
