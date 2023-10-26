@@ -1,4 +1,3 @@
-import { setProperty } from "../../common/utils/helpers.mjs";
 import { ActiveEffectModel } from "../data/active-effect.mjs";
 
 export class OHActiveEffect extends ActiveEffect {
