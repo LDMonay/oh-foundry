@@ -1,0 +1,21 @@
+<section class="effects flexcol">
+    <header class="effect-list-header flexrow">
+        <div class="name">Active Effects</div>
+        <div class="item-controls" data-type="ActiveEffect">
+            <a class="item-create" data-action="create" data-tooltip="New Effect"><i class="fas fa-plus"></i></a>
+        </div>
+    </header>
+
+    <ol class="effect-list">
+        {{#each activeEffects as |effect id|}}
+            <li class="effect flexrow" data-effect-id="{{effect._id}}">
+                <img src="{{effect.img}}" alt="{{effect.name}}" class="icon" />
+                <span class="name">{{effect.name}}</span>
+                <div class="item-controls" data-type="ActiveEffect">
+                    <a data-action="edit" data-tooltip="OH.Edit"><i class="fas fa-edit"></i></a>
+                    <a data-action="delete" data-tooltip="OH.Delete"><i class="fas fa-trash"></i></a>
+                </div>
+            </li>
+        {{/each}}
+    </ol>
+</section>

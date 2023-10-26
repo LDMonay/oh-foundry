@@ -1,0 +1,60 @@
+.outerheaven {
+    .item-list,
+    .effect-list {
+        padding: 0;
+        margin: 0.2em 0;
+    }
+
+    // Specific styling for the header row
+    .item-list-header,
+    .effect-list-header {
+        font-weight: bold;
+        padding: 0.25em;
+        background: rgba(0, 0, 0, 0.1);
+        border: 1px groove rgba(0, 0, 0, 0.1);
+
+        .name {
+            padding-left: 5px;
+        }
+    }
+
+    // Common styling for the header and item rows
+    .item-list .item,
+    .item-list-header,
+    .effect,
+    .effect-list-header {
+        text-align: center;
+        padding: 0.2em 0;
+
+        &:nth-child(even) {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        // Vertically center contained elements/text
+        > * {
+            align-self: center;
+        }
+
+        .name {
+            text-align: left;
+            flex: 1.1 0 4em;
+            > span {
+                align-self: center;
+            }
+        }
+
+        .icon {
+            max-width: 24px;
+            max-height: 24px;
+            margin-right: 5px;
+        }
+
+        .item-controls {
+            flex: 0 0 3em;
+            margin-left: 5px;
+            > a {
+                margin-left: 5px;
+            }
+        }
+    }
+}

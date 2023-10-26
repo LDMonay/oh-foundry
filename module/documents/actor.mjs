@@ -1,36 +1,13 @@
-import { OUTERHEAVEN } from "../config.mjs";
 import { OHArmor } from "../data/armor.mjs";
 
 export class OHActor extends Actor {
-    /** @override */
-    prepareDerivedData() {
-        const actorData = this;
-        const systemData = actorData.system;
-
-        // Armor Total
-        systemData.armor = this.itemTypes.armor.reduce(
-            (acc, item) => {
-                for (const armorBonus of item.system.armorBonuses) {
-                    if (armorBonus.armorType === "all") {
-                        for (const armorType of Object.keys(OUTERHEAVEN.armorTypes)) {
-                            acc[armorType] += armorBonus.value;
-                        }
-                    } else acc[armorBonus.armorType] += armorBonus.value;
-                }
-                return acc;
-            },
-            Object.fromEntries(Object.keys(OUTERHEAVEN.armorTypes).map((key) => [key, 0])),
-        );
-
-        // Points
-        const baseUnitPoints = systemData.baseUnitPointsIgnore ? 0 : systemData.baseUnitPoints;
-        const pointsTotal = this.items.reduce((acc, item) => {
-            if (!item.system.ignoreCost) {
-                acc += item.system.pointCost;
-            }
-            return acc;
-        }, baseUnitPoints);
-        systemData.totalPoints = pointsTotal;
+    /**
+     * The actor's `form` type item, if any.
+     *
+     * @type {OHItem | null}
+     */
+    get form() {
+        return this.items.find((item) => item.type === "form") ?? null;
     }
 
     /**

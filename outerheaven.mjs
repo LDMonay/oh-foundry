@@ -23,6 +23,10 @@ globalThis.outerheaven = {
     sheets,
 };
 
+if (import.meta.env.DEV) {
+    await import("./module/tests/index.mjs");
+}
+
 Hooks.once("init", function () {
     console.log("Outer Heaven | Initializing the battlefield...");
 
@@ -42,11 +46,16 @@ Hooks.once("init", function () {
         ability: dataModels.OHAbility,
         armor: dataModels.OHArmor,
         equipment: dataModels.OHEquipment,
+        form: dataModels.OHForm,
         skill: dataModels.OHSkill,
         weapon: dataModels.OHWeapon,
     };
     Items.unregisterSheet("core", ItemSheet);
     Items.registerSheet("outerheaven", sheets.OHItemSheet, { makeDefault: true });
+
+    // Active Effects
+    CONFIG.ActiveEffect.legacyTransferral = false;
+    CONFIG.ActiveEffect.documentClass = documents.OHActiveEffect;
 
     // Dice
     CONFIG.Dice.rolls.push(dice.DamageRoll);
@@ -84,6 +93,10 @@ Hooks.on("renderChatLog", (app, html, data) => {
         const targetId = event.currentTarget.dataset.targetId;
         message.action.applyTargetDamage(targetId);
     });
+});
+
+Hooks.on("renderActiveEffectConfig", (app, html, data) => {
+    documents.onRenderActiveEffectConfig(app, html, data);
 });
 
 async function createItemMacro(data, slot) {
