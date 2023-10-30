@@ -11,6 +11,7 @@ import * as utils from "./module/utils.mjs";
 import * as dice from "./module/dice/_module.mjs";
 import * as actions from "./module/actions/_module.mjs";
 import { registerSettings } from "./module/settings.mjs";
+import { SYSTEM_ID } from "./module/const.mjs";
 
 // API
 export { actions, OUTERHEAVEN as config, dataModels, dice, documents, sheets };
@@ -56,6 +57,7 @@ Hooks.once("init", function () {
     // Active Effects
     CONFIG.ActiveEffect.legacyTransferral = false;
     CONFIG.ActiveEffect.documentClass = documents.OHActiveEffect;
+    DocumentSheetConfig.registerSheet(ActiveEffect, SYSTEM_ID, sheets.OHActiveEffectConfig, { makeDefault: true });
 
     // Dice
     CONFIG.Dice.rolls.push(dice.DamageRoll);
@@ -93,10 +95,6 @@ Hooks.on("renderChatLog", (app, html, data) => {
         const targetId = event.currentTarget.dataset.targetId;
         message.action.applyTargetDamage(targetId);
     });
-});
-
-Hooks.on("renderActiveEffectConfig", (app, html, data) => {
-    documents.onRenderActiveEffectConfig(app, html, data);
 });
 
 async function createItemMacro(data, slot) {

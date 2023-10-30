@@ -488,5 +488,7 @@ module.exports = {
         OutlineOverlayFilter: "readonly",
         SearchFilter: "readonly",
         outerheaven: "readonly",
+        ActiveEffectConfig: "readonly",
+        DocumentSheetConfig: "readonly",
     },
 };
