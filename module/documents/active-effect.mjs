@@ -63,14 +63,3 @@ export class OHActiveEffect extends ActiveEffect {
         return super.getRelativeUUID(doc);
     }
 }
-
-/**
- * @param {Application} app
- * @param {JQuery} html
- * @param {object} data
- */
-export function onRenderActiveEffectConfig(app, html, data) {
-    const renderData = { ...data, system: app.object.system, config: outerheaven.config };
-    const newHtml = Handlebars.partials["oh.ae-config"](renderData);
-    html.find(".tab[data-tab='details']").append(newHtml);
-}

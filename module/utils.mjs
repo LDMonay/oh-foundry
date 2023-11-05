@@ -16,7 +16,6 @@ export async function preloadHandlebarsTemplates() {
         "systems/outerheaven/templates/sheets/parts/unit-stats-defense.hbs",
         "systems/outerheaven/templates/sheets/parts/unit-weapons.hbs",
         "systems/outerheaven/templates/sheets/parts/item-effects.hbs",
-        "systems/outerheaven/templates/sheets/parts/ae-config.hbs",
         "systems/outerheaven/templates/chat/item-display.hbs",
         "systems/outerheaven/templates/chat/defense-display.hbs",
         "systems/outerheaven/templates/chat/defense-stats-display.hbs",
