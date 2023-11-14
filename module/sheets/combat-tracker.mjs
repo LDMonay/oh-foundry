@@ -56,7 +56,7 @@ export class OHCombatTracker extends CombatTracker {
             css.delete("active");
 
             turn.done = combatant.system.done ?? false;
-            turn.active = combat?.turn === combatant.initiative;
+            turn.active = combat.started && combat?.turn === combatant.initiative;
             if (turn.active && !turn.done) {
                 css.add("active");
                 // Add special highlighting for players' combatants requiring attention
