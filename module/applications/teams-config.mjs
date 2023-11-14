@@ -27,7 +27,6 @@ export class TeamsConfig extends FormApplication {
         return {
             ...options,
             id: `${SYSTEM_ID}-teams-config`,
-            title: game.i18n.localize("OH.Settings.TeamsConfig.Title"),
             classes: [...options.classes, SYSTEM_ID, "teams-config"],
             template: `systems/${SYSTEM_ID}/templates/applications/teams-config.hbs`,
             tabs: [{ navSelector: ".tabs", contentSelector: ".content" }],
@@ -43,6 +42,12 @@ export class TeamsConfig extends FormApplication {
         const parts = [super.id];
         if (this.combat) parts.push(this.combat.uuid.replace(/\./g, "-"));
         return parts.join("-");
+    }
+
+    /** @override */
+    get title() {
+        if (this.combat) return game.i18n.localize("OH.Settings.TeamsConfig.TitleCombat");
+        else return game.i18n.localize("OH.Settings.TeamsConfig.TitleSettings");
     }
 
     /** @override */
