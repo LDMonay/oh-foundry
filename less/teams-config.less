@@ -1,0 +1,45 @@
+.outerheaven.teams-config {
+    .window-content {
+        padding: 0;
+    }
+
+    aside.sidebar {
+        flex: 0 0 220px;
+        height: 100%;
+        border-right: 1px solid var(--color-border-light-primary);
+        font-size: var(--font-size-12);
+        padding: 1rem;
+
+        nav.tabs {
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden auto;
+
+            .tab {
+                display: flex;
+                justify-content: space-between;
+                padding: 6px 0;
+                border-bottom: 1px solid var(--color-border-light-primary);
+                text-align: left;
+
+                .controls {
+                    flex: 0 0 3em;
+                    text-align: right;
+                    text-shadow: none;
+                }
+            }
+        }
+
+        > .controls {
+            flex: 0;
+        }
+    }
+
+    .content {
+        padding: 1rem;
+
+        footer {
+            flex: 0;
+        }
+    }
+}

@@ -4,12 +4,13 @@ import "./module/hmr.mjs";
 
 // Import ES module files
 import { OUTERHEAVEN } from "./module/config.mjs";
-import * as documents from "./module/documents/_module.mjs";
+import * as actions from "./module/actions/_module.mjs";
+import * as applications from "./module/applications/_module.mjs";
 import * as dataModels from "./module/data/_module.mjs";
+import * as dice from "./module/dice/_module.mjs";
+import * as documents from "./module/documents/_module.mjs";
 import * as sheets from "./module/sheets/_module.mjs";
 import * as utils from "./module/utils.mjs";
-import * as dice from "./module/dice/_module.mjs";
-import * as actions from "./module/actions/_module.mjs";
 import { registerSettings } from "./module/settings.mjs";
 import { SYSTEM_ID } from "./module/const.mjs";
 
@@ -17,13 +18,16 @@ import { SYSTEM_ID } from "./module/const.mjs";
 export { actions, OUTERHEAVEN as config, dataModels, dice, documents, sheets };
 globalThis.outerheaven = {
     actions,
+    applications,
     config: OUTERHEAVEN,
     dataModels,
     dice,
     documents,
     sheets,
+    utils,
 };
 
+// Load tests in dev environment
 if (import.meta.env.DEV) {
     await import("./module/tests/index.mjs");
 }
@@ -58,6 +62,11 @@ Hooks.once("init", function () {
     CONFIG.ActiveEffect.legacyTransferral = false;
     CONFIG.ActiveEffect.documentClass = documents.OHActiveEffect;
     DocumentSheetConfig.registerSheet(ActiveEffect, SYSTEM_ID, sheets.OHActiveEffectConfig, { makeDefault: true });
+
+    // Combat
+    CONFIG.Combat.documentClass = documents.OHCombat;
+    CONFIG.Combatant.documentClass = documents.OHCombatant;
+    CONFIG.ui.combat = sheets.OHCombatTracker;
 
     // Dice
     CONFIG.Dice.rolls.push(dice.DamageRoll);
