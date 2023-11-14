@@ -30,6 +30,7 @@ export class TeamsConfig extends FormApplication {
             classes: [...options.classes, SYSTEM_ID, "teams-config"],
             template: `systems/${SYSTEM_ID}/templates/applications/teams-config.hbs`,
             tabs: [{ navSelector: ".tabs", contentSelector: ".content" }],
+            dragDrop: [{ dragSelector: ".team", dropSelector: ".tabs" }],
             width: 600,
             height: "auto",
             submitOnChange: true,
@@ -64,6 +65,7 @@ export class TeamsConfig extends FormApplication {
             const team = this.object.find((t) => t.id === id);
             if (team) team.updateSource(teamData);
         }
+        this.#sortTeams();
         this.render();
     }
 
@@ -87,9 +89,11 @@ export class TeamsConfig extends FormApplication {
         this.object.push(
             new Team({
                 _id: generateId(name, { siblings: this.object }),
+                sort: this.object.length + 2,
                 name,
             }),
         );
+        this.#sortTeams();
         this.render();
     }
 
@@ -104,7 +108,17 @@ export class TeamsConfig extends FormApplication {
         event.stopPropagation();
         const id = event.currentTarget.closest(".team").dataset.tab;
         this.object.findSplice((team) => team.id === id);
+        this.#sortTeams();
         this.render();
+    }
+
+    /**
+     * Sort teams by their `sort` and update that value to match their resulting position.
+     * @private
+     */
+    #sortTeams() {
+        this.object.sort((a, b) => a.sort - b.sort);
+        this.object.forEach((team, index) => team.updateSource({ sort: index + 1 }));
     }
 
     /**
@@ -126,5 +140,36 @@ export class TeamsConfig extends FormApplication {
         }
 
         this.close();
+    }
+
+    /** @override */
+    _onDragStart(event) {
+        const li = event.currentTarget.closest(".team");
+        const team = this.object.find((t) => t.id === li.dataset.tab);
+        event.dataTransfer.setData("text/plain", JSON.stringify({ type: "Team", teamId: team.id }));
+        event.dataTransfer.dropEffect = "move";
+    }
+
+    /**
+     * Handle dropping a team in the nav menu to change its sort order.
+     *
+     * @override
+     */
+    async _onDrop(event) {
+        const data = TextEditor.getDragEventData(event);
+        if (data.type !== "Team") return;
+
+        const source = this.object.find((t) => t.id === data.teamId);
+        const dropTarget = event.target.closest(".team");
+        if (!dropTarget) return;
+        const target = this.object.find((t) => t.id === dropTarget.dataset.tab);
+
+        const sorted = this.object.sort((a, b) => a.sort - b.sort);
+        const targetIndex = sorted.indexOf(target);
+        sorted.splice(sorted.indexOf(source), 1);
+        sorted.splice(targetIndex, 0, source);
+        this.object.forEach((team, index) => team.updateSource({ sort: index + 1 }));
+
+        this.render();
     }
 }
