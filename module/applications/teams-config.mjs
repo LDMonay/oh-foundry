@@ -101,6 +101,7 @@ export class TeamsConfig extends FormApplication {
      */
     _onRemoveTeam(event) {
         event.preventDefault();
+        event.stopPropagation();
         const id = event.currentTarget.closest(".team").dataset.tab;
         this.object.findSplice((team) => team.id === id);
         this.render();
