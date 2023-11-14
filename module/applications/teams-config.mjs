@@ -32,7 +32,7 @@ export class TeamsConfig extends FormApplication {
             template: `systems/${SYSTEM_ID}/templates/applications/teams-config.hbs`,
             tabs: [{ navSelector: ".tabs", contentSelector: ".content" }],
             width: 600,
-            height: 300,
+            height: "auto",
             submitOnChange: true,
             closeOnSubmit: false,
         };
