@@ -41,6 +41,10 @@
             }
         },
 
+        "Combat": {
+            "Done": "Done"
+        },
+
         "DamageTypes": {
             "Untyped": "Untyped",
             "Energy": "Energy",

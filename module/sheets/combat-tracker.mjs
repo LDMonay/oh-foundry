@@ -148,6 +148,23 @@ export class OHCombatTracker extends CombatTracker {
         const sortedTeamData = sorted.map((team, index) => ({ ...team.toObject(), sort: index + 1 }));
         return this.viewed.update({ [`flags.${SYSTEM_ID}.teams`]: sortedTeamData });
     }
+
+    /** @override */
+    async _onCombatantControl(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const button = event.currentTarget;
+        const li = button.closest(".combatant");
+        const combat = this.viewed;
+        const combatant = combat.combatants.get(li.dataset.combatantId);
+
+        if (button.dataset.control === "toggleDone") {
+            return combatant.toggleDone();
+        } else {
+            return super._onCombatantControl(event);
+        }
+    }
 }
 
 /**
