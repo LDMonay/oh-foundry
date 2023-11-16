@@ -15,6 +15,9 @@ A single actor type which is able to :
 -   Tally up a total point cost from all the items of the actor
 -   Settings for compendiums and critical damage behavior
 -   Use effects for buffs and such. (Pretty barebones)
+-   All items types can have embeded effects that apply to the actor.
+-   Side/Team initative instead of individual token initiative
+-   Weapons should have an option to be reloaded to full, which would display a chat template.
 
 A number of item types :
 
@@ -22,19 +25,15 @@ A number of item types :
 -   Weapons, which have the ability to be used to shoot from the actor sheet.
 -   Armors, which may provide a number of defenses then displayed on the actor sheet.
 
-# Features I WANT to implement (high priority)
-
--   Weapons should have an option to be reloaded to full, which would display a chat template.
--   Effects should be made into an item type, in order to allow them to be stored in a compendium.
-
-# Features I would like to implement (lower priority)
+# Features I would like to implement
 
 -   Items other than weapons can be 'used' (charges and power consumption)
--   An actor or item type used to handle the newly made campaign system (Mostly a simple record sheet, with a few functionalities allowing for passing a week and calculating expenses.)
--   All items types can have embeded effects that apply to the actor.
+-   Checkmark on tokens when they are set to "Done" in the initiative tracker + button on their right click menu to set them as "Done".
+-   Sheet buttons (such as Show Defenses / Fire Weapon) can be dragged to the macro bar and make a macro.
 -   A few measurement Templates
--   Side/Team initative instead of individual token initiative
 -   Add a heat generation stat to items which, when used, would increase the actor's Heat value.
 -   Add an actor heat dissipation stat which would reduce the actor's current heat value on the start of his turn.
 -   Damage over Time effects that trigger on turn start.
+-   Token-Action-HUD module integration (https://github.com/LDMonay/token-action-hud-oh)
+-   An actor or item type used to handle the newly made campaign system (Mostly a simple record sheet, with a few functionalities allowing for passing a week and calculating expenses.)
 -   Vehicle actors that can contain other actors...
