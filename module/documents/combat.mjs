@@ -89,6 +89,14 @@ export class OHCombat extends Combat {
     }
 
     /** @override */
+    async startCombat() {
+        this._playCombatSound("startEncounter");
+        const updateData = { round: 1, turn: this.teamTurns[0].sort };
+        Hooks.callAll("combatStart", this, updateData);
+        return this.update(updateData);
+    }
+
+    /** @override */
     async nextTurn() {
         const turn = this.turn ?? -1;
         const skip = this.settings.skipDefeated;
