@@ -1,5 +1,8 @@
-import { ItemCompendiumConfig, ItemCompendiumSettings } from "./applications/item-compendiums.mjs";
+import { ItemCompendiumConfig } from "./applications/item-compendiums.mjs";
+import { TeamsConfig } from "./applications/teams-config.mjs";
 import { SYSTEM_ID } from "./const.mjs";
+import { Team } from "./data/combat.mjs";
+import { ItemCompendiumSettings } from "./data/settings.mjs";
 
 /**
  * Register the system's settings.
@@ -35,6 +38,22 @@ export function registerSettings() {
         hint: "OH.Settings.ItemCompendiums.Hint",
         icon: "fas fa-book",
         type: ItemCompendiumConfig,
+        restricted: true,
+    });
+
+    // Default teams
+    game.settings.register(SYSTEM_ID, "defaultTeams", {
+        scope: "world",
+        config: false,
+        type: (value) => value.map((team) => new Team(team)),
+        default: [],
+    });
+    game.settings.registerMenu(SYSTEM_ID, "teamsConfig", {
+        name: "OH.Settings.TeamsConfig.Name",
+        label: "OH.Settings.TeamsConfig.Label",
+        hint: "OH.Settings.TeamsConfig.Hint",
+        icon: "fas fa-flag",
+        type: TeamsConfig,
         restricted: true,
     });
 }

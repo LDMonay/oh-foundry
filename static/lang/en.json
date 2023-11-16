@@ -27,7 +27,23 @@
                 "Hint": "Compendiums opened when importing items in an actor sheet",
                 "Label": "Open Item Compendium Configuration",
                 "TypeLabel": "{type} Compendium"
+            },
+            "TeamsConfig": {
+                "Name": "Default Teams",
+                "Hint": "Teams added by default when a new combat is created.",
+                "Label": "Open Teams Configuration",
+                "TitleSettings": "Default Teams Configuration",
+                "TitleCombat": "Combat Teams Configuration",
+                "TeamName": "Team Name",
+                "Color": "Color",
+                "Add": "Add Team",
+                "Remove": "Remove Team",
+                "NewTeam": "New Team"
             }
+        },
+
+        "Combat": {
+            "Done": "Done"
         },
 
         "DamageTypes": {
