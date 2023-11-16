@@ -25,7 +25,7 @@
         <div class="encounter-controls flexrow {{#if hasCombat}}combat{{/if}}">
             {{! OH Add control button to configure teams }}
             {{#if (and user.isGM hasCombat)}}
-                <a class="combat-button combat-control" role="button" data-tooltip="{{localize "OH.Settings.TeamsConfig.Title"}}" data-control="configureTeams">
+                <a class="combat-button combat-control" role="button" data-tooltip="OH.Settings.TeamsConfig.TitleCombat" data-control="configureTeams">
                     <i class="fas fa-flag"></i>
                 </a>
             {{/if}}
