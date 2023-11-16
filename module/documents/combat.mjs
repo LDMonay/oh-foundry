@@ -1,4 +1,3 @@
-import { hasProperty } from "../../common/utils/helpers.mjs";
 import { TeamsConfig } from "../applications/teams-config.mjs";
 import { SYSTEM_ID } from "../const.mjs";
 import { CombatData, Team } from "../data/combat.mjs";
