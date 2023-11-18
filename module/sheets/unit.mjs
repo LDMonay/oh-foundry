@@ -114,12 +114,7 @@ export class OHUnitSheet extends ActorSheet {
         html.find(".item-import").click(this._onItemImport.bind(this));
 
         // Delete Inventory Item
-        html.find(".item-delete").click((ev) => {
-            const li = $(ev.currentTarget).parents(".item");
-            const item = this.actor.items.get(li.data("itemId"));
-            item.delete();
-            li.slideUp(200, () => this.render(false));
-        });
+        html.find(".item-delete").click(this._onItemDelete.bind(this));
 
         // Inline Edit Item
         html.find(".inline-edit").change(this._onInlineEdit.bind(this));
@@ -188,6 +183,28 @@ export class OHUnitSheet extends ActorSheet {
         const field = element.dataset.field;
 
         return await item.update({ [field]: element.value });
+    }
+
+    /**
+     * Delete an item from the actor, prompting for confirmation unless shift is held.
+     *
+     * @private
+     * @param {Event} event - The originating click event.
+     * @returns {Promise<void>}
+     */
+    async _onItemDelete(event) {
+        event.preventDefault();
+        const li = event.currentTarget.closest(".item");
+        const item = this.actor.items.get(li.dataset.itemId);
+        if (event.shiftKey) {
+            return item.delete();
+        } else {
+            const bounds = li.getBoundingClientRect();
+            return item.deleteDialog({
+                top: Math.min(bounds.top, window.innerHeight - 140),
+                left: Math.min(bounds.right + 8, window.innerWidth - 410),
+            });
+        }
     }
 
     _onDisplayItem(event) {
