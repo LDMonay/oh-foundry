@@ -85,6 +85,10 @@
             "Hint": "Types the system attaches special behavior to."
         },
 
+        "Notifications": {
+            "ItemMacroOnlyOwned": "Item macros can only be created for owned items."
+        },
+
         "Create": "Create",
         "OpenCompendium": "Open Compendium",
         "Edit": "Edit",

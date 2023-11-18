@@ -1,3 +1,5 @@
+import { SYSTEM_ID } from "../const.mjs";
+
 export class OHItem extends Item {
     static displayTemplate = {
         equipment: "systems/outerheaven/templates/chat/item-display.hbs",
@@ -6,6 +8,35 @@ export class OHItem extends Item {
         skill: "systems/outerheaven/templates/chat/defense-display.hbs",
         weapon: "systems/outerheaven/templates/chat/weapon-display.hbs",
     };
+
+    /**
+     * Create a macro from an Item drop, unless an identical macro already exists, and assign it to a hotbar slot.
+     *
+     * @param {Object} data     The dropped data
+     * @param {number} slot     The hotbar slot to use
+     * @returns {Promise<User | void>} The updated User after creating or moving the macro
+     */
+    static async createMacro(data, slot) {
+        const item = await this.fromDropData(data);
+        if (!item.isOwned) {
+            ui.notifications.warn(game.i18n.localize("OH.Notifications.ItemMacroOnlyOwned"));
+            return;
+        }
+
+        // Create the macro command using the uuid.
+        const command = `fromUuidSync("${item.uuid}").use()`;
+        let macro = game.macros.find((m) => m.name === item.name && m.command === command);
+        if (!macro) {
+            macro = await Macro.create({
+                name: item.name,
+                type: "script",
+                img: item.img,
+                command: command,
+                flags: { [`${SYSTEM_ID}.itemMacro`]: true },
+            });
+        }
+        return game.user.assignHotbarMacro(macro, slot);
+    }
 
     /** @override */
     async _preCreate(data, options, user) {
