@@ -140,20 +140,18 @@ export class OHUnitSheet extends ActorSheet {
     async _onItemCreate(event) {
         event.preventDefault();
         const header = event.currentTarget;
-        // Get the type of item to create.
-        const type = header.dataset.type;
         // Grab any data associated with this control.
-        const data = duplicate(header.dataset);
+        const { type, ...data } = foundry.utils.deepClone(header.dataset);
         // Initialize a default name.
-        const name = `New ${type.capitalize()}`;
+        const name = game.i18n.format("DOCUMENT.New", { type: game.i18n.localize(`TYPES.Item.${type}`) });
+        const sort = Math.max(...this.actor.itemTypes[type].map((i) => i.sort ?? 0), 0) + CONST.SORT_INTEGER_DENSITY;
         // Prepare the item object.
         const itemData = {
             name: name,
             type: type,
             system: data,
+            sort: sort ?? CONST.SORT_INTEGER_DENSITY,
         };
-        // Remove the type from the dataset since it's in the itemData.type prop.
-        delete itemData.system["type"];
 
         // Finally, create the item!
         return await Item.create(itemData, { parent: this.actor });
