@@ -114,12 +114,7 @@ export class OHUnitSheet extends ActorSheet {
         html.find(".item-import").click(this._onItemImport.bind(this));
 
         // Delete Inventory Item
-        html.find(".item-delete").click((ev) => {
-            const li = $(ev.currentTarget).parents(".item");
-            const item = this.actor.items.get(li.data("itemId"));
-            item.delete();
-            li.slideUp(200, () => this.render(false));
-        });
+        html.find(".item-delete").click(this._onItemDelete.bind(this));
 
         // Inline Edit Item
         html.find(".inline-edit").change(this._onInlineEdit.bind(this));
@@ -145,20 +140,18 @@ export class OHUnitSheet extends ActorSheet {
     async _onItemCreate(event) {
         event.preventDefault();
         const header = event.currentTarget;
-        // Get the type of item to create.
-        const type = header.dataset.type;
         // Grab any data associated with this control.
-        const data = duplicate(header.dataset);
+        const { type, ...data } = foundry.utils.deepClone(header.dataset);
         // Initialize a default name.
-        const name = `New ${type.capitalize()}`;
+        const name = game.i18n.format("DOCUMENT.New", { type: game.i18n.localize(`TYPES.Item.${type}`) });
+        const sort = Math.max(...this.actor.itemTypes[type].map((i) => i.sort ?? 0), 0) + CONST.SORT_INTEGER_DENSITY;
         // Prepare the item object.
         const itemData = {
             name: name,
             type: type,
             system: data,
+            sort: sort ?? CONST.SORT_INTEGER_DENSITY,
         };
-        // Remove the type from the dataset since it's in the itemData.type prop.
-        delete itemData.system["type"];
 
         // Finally, create the item!
         return await Item.create(itemData, { parent: this.actor });
@@ -188,6 +181,28 @@ export class OHUnitSheet extends ActorSheet {
         const field = element.dataset.field;
 
         return await item.update({ [field]: element.value });
+    }
+
+    /**
+     * Delete an item from the actor, prompting for confirmation unless shift is held.
+     *
+     * @private
+     * @param {Event} event - The originating click event.
+     * @returns {Promise<void>}
+     */
+    async _onItemDelete(event) {
+        event.preventDefault();
+        const li = event.currentTarget.closest(".item");
+        const item = this.actor.items.get(li.dataset.itemId);
+        if (event.shiftKey) {
+            return item.delete();
+        } else {
+            const bounds = li.getBoundingClientRect();
+            return item.deleteDialog({
+                top: Math.min(bounds.top, window.innerHeight - 140),
+                left: Math.min(bounds.right + 8, window.innerWidth - 410),
+            });
+        }
     }
 
     _onDisplayItem(event) {
