@@ -94,7 +94,10 @@ Hooks.once("i18nInit", function () {
 
 Hooks.once("ready", function () {
     // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
-    Hooks.on("hotbarDrop", (bar, data, slot) => createItemMacro(data, slot));
+    Hooks.on("hotbarDrop", (bar, data, slot) => {
+        if (data.type === "Item") documents.OHItem.createMacro(data, slot);
+        return false;
+    });
     console.log("Outer Heaven | Activated Macro Drag&Drop");
 });
 
@@ -105,53 +108,3 @@ Hooks.on("renderChatLog", (app, html, data) => {
         message.action.applyTargetDamage(targetId);
     });
 });
-
-async function createItemMacro(data, slot) {
-    // First, determine if this is a valid owned item.
-    if (data.type !== "Item") return;
-    if (!data.uuid.includes("Actor.") && !data.uuid.includes("Token.")) {
-        return ui.notifications.warn("You can only create macro buttons for owned Items");
-    }
-
-    // If it is, retrieve it based on the uuid.
-    const item = await Item.fromDropData(data);
-
-    // Create the macro command using the uuid.
-    const command = `game.outerheaven.rollItemMacro("${data.uuid}");`;
-    let macro = game.macros.find((m) => m.name === item.name && m.command === command);
-    if (!macro) {
-        macro = await Macro.create({
-            name: item.name,
-            type: "script",
-            img: item.img,
-            command: command,
-            flags: { "outerheaven.itemMacro": true },
-        });
-    }
-    game.user.assignHotbarMacro(macro, slot);
-    return false;
-}
-
-function rollItemMacro(itemUuid) {
-    // Reconstruct the drop data so that we can load the item.
-    const dropData = {
-        type: "Item",
-        uuid: itemUuid,
-    };
-    // Load the item from the uuid.
-    Item.fromDropData(dropData).then((item) => {
-        // Determine if the item loaded and if it's an owned item.
-        if (!item || !item.parent) {
-            const itemName = item?.name ?? itemUuid;
-            return ui.notifications.warn(
-                `Could not find item ${itemName}. You may need to delete and recreate this macro.`,
-            );
-        }
-
-        if (item.type === "weapon") {
-            // TODO: Replace with direct use of UUID
-        } else {
-            item.displayInChat();
-        }
-    });
-}
