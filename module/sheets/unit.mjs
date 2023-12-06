@@ -1,4 +1,4 @@
-import { SYSTEM_ID } from "../const.mjs";
+import { SYSTEM } from "../const.mjs";
 import { OHArmor } from "../data/armor.mjs";
 import { OHItem } from "../documents/item.mjs";
 import { onManageActiveEffect, prepareActiveEffectCategories } from "../effects.mjs";
@@ -10,6 +10,7 @@ export class OHUnitSheet extends ActorSheet {
             ...options,
             classes: [...options.classes, "sheet", "character-sheet", "outerheaven"],
             template: `systems/outerheaven/templates/sheets/unit-sheet.hbs`,
+            dragDrop: [...options.dragDrop, { dragSelector: "a.item-action" }],
             width: 760,
             height: 680,
         };
@@ -124,9 +125,7 @@ export class OHUnitSheet extends ActorSheet {
         html.find(".displayDefenses").click(this._onDisplayDefenses.bind(this));
 
         // Use weapon
-        html.find(".use-weapon").click(this._onUseWeapon.bind(this));
-
-        html.find(".ammo .reload").click(this._onReloadWeapon.bind(this));
+        html.find(".item-action").click(this._onItemAction.bind(this));
 
         // Active Effect management
         html.find(".effect-control").click((ev) => onManageActiveEffect(ev, this.actor));
@@ -168,7 +167,7 @@ export class OHUnitSheet extends ActorSheet {
         const createButton = event.currentTarget.previousElementSibling;
         const type = createButton.dataset.type;
 
-        const itemCompendiums = game.settings.get(SYSTEM_ID, "itemCompendiums");
+        const itemCompendiums = game.settings.get(SYSTEM.ID, "itemCompendiums");
         if (!itemCompendiums[type]) return;
         game.packs.get(itemCompendiums[type]).render(true);
     }
@@ -216,15 +215,41 @@ export class OHUnitSheet extends ActorSheet {
         actorData.displayDefenseCard();
     }
 
-    _onUseWeapon(event) {
-        const li = $(event.currentTarget).parents(".item");
-        const item = this.actor.items.get(li.data("itemId"));
-        item.use({ token: this.token });
+    /**
+     * Handle clicking on item actions like like "Use" or "Reload".
+     *
+     * @private
+     * @param {Event} event - The originating click event.
+     * @returns {void}
+     */
+    _onItemAction(event) {
+        event.preventDefault();
+        const li = event.currentTarget.closest(".item");
+        const item = this.actor.items.get(li.dataset.itemId);
+        const action = event.currentTarget.dataset.action;
+        if (!action || !item) return;
+        return item.use({ action, token: this.token });
     }
 
-    _onReloadWeapon(event) {
-        const li = $(event.currentTarget).parents(".item");
-        const item = this.actor.items.get(li.data("itemId"));
-        item.reload({ token: this.token });
+    /**
+     * @override
+     * @param {JQuery.DragEvent} event - The originating drag event.
+     */
+    _onDragStart(event) {
+        const liItem = event.currentTarget.closest(".item");
+        const aAction = event.currentTarget.closest(".item-action");
+        const item = this.actor.items.get(liItem?.dataset?.itemId);
+
+        // Handle item actions
+        if (item && aAction) {
+            const dragData = item.toDragData();
+            dragData.action = aAction.dataset.action;
+            if (!dragData) return;
+            // Set data transfer
+            event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+        } else {
+            // Handle anything that is not a dragged item action
+            super._onDragStart(event);
+        }
     }
 }

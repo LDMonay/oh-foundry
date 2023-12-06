@@ -65,18 +65,82 @@
         background: rgba(0, 0, 0, 0.1);
         padding: 0.2em;
 
-        header {
+        > header,
+        header h4 {
             font-weight: bold;
             margin-bottom: 0;
         }
     }
 
-    // Weapon reload
-    &.reload {
-        .reload-content {
-            margin-top: 0.5em;
-            margin-bottom: 0.5em;
+    // Coloring for warning signs
+    .warning {
+        font-weight: bold;
+        color: darkorange;
+    }
+
+    // Compact styling for lists
+    ul,
+    ol {
+        margin: 0;
+        padding: 0;
+    }
+
+    // Common styling for apply buttons
+    button.apply {
+        max-height: 32px;
+        max-width: 32px;
+    }
+
+    // Description blocks for various item uses
+    .description {
+        .description-content {
+            transition: max-height 0.75s ease-in-out;
+            max-height: 1.5rem;
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
         }
+        .description-content.expanded {
+            transition: max-height 0.75s ease-in-out;
+            max-height: 20rem;
+            overflow-y: auto;
+            -webkit-mask-image: none;
+            mask-image: none;
+        }
+    }
+
+    // On Use Effects
+    .effects {
+        grid-area: effects;
+        margin: 0;
+
+        > ul.effect-list {
+            margin: 0;
+        }
+
+        .effect {
+            .icon {
+                max-width: 32px;
+                max-height: 32px;
+                align-self: center;
+            }
+
+            &:not(:first-of-type) {
+                border-top: 1px groove rgba(0, 0, 0, 0.2);
+            }
+            &:nth-child(even) {
+                background: unset; // Remove background styling used in sheets
+            }
+        }
+    }
+    // ======================
+    // Specific action styles
+    // ======================
+
+    // Weapon reload
+    &.reload,
+    &.item-use {
+        gap: 0.3em;
     }
 
     // Weapon attack
@@ -84,10 +148,12 @@
         display: grid;
         grid-template-areas:
             "header header"
+            "description description"
             "attack-details ammo-range"
             "damage-details attack-costs"
             "properties properties"
-            "target-results target-results";
+            "target-results target-results"
+            "effects effects";
         grid-template-columns: 1fr 1fr;
         grid-template-rows: auto;
         gap: 0.3em;
@@ -106,14 +172,12 @@
             .number-of-attacks,
             .ap {
                 margin: 0.1em;
-
-                .ammo-empty {
-                    font-weight: bold;
-                    color: darkorange;
-                }
             }
         }
 
+        .description {
+            grid-area: description;
+        }
         .attack-details {
             grid-area: attack-details;
         }
@@ -136,14 +200,21 @@
             grid-area: properties;
         }
 
+        .effects {
+            grid-area: effects;
+        }
+
         .target-results {
             grid-area: target-results;
+            gap: 0.2em;
 
             .target-result {
                 // Add border between targets
-                margin: 0.3em 0 0.3em 0;
-                border-top: 1px groove rgba(0, 0, 0, 0.4);
                 gap: 0.2em;
+
+                &:not(:first-of-type) {
+                    border-top: 1px groove rgba(0, 0, 0, 0.2);
+                }
 
                 .target-icon {
                     max-width: 32px;
@@ -173,7 +244,6 @@
                 .apply-damage {
                     max-height: 32px;
                     max-width: 32px;
-                    align-self: end;
                 }
             }
             .target-damage {
@@ -181,11 +251,6 @@
                 .min-damage {
                     color: #aa0200;
                 }
-            }
-            .apply-damage {
-                max-height: 32px;
-                max-width: 32px;
-                align-self: end;
             }
         }
     }

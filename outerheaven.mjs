@@ -12,7 +12,7 @@ import * as documents from "./module/documents/_module.mjs";
 import * as sheets from "./module/sheets/_module.mjs";
 import * as utils from "./module/utils.mjs";
 import { registerSettings } from "./module/settings.mjs";
-import { SYSTEM_ID } from "./module/const.mjs";
+import { SYSTEM } from "./module/const.mjs";
 
 // API
 export { actions, OUTERHEAVEN as config, dataModels, dice, documents, sheets };
@@ -61,7 +61,7 @@ Hooks.once("init", function () {
     // Active Effects
     CONFIG.ActiveEffect.legacyTransferral = false;
     CONFIG.ActiveEffect.documentClass = documents.OHActiveEffect;
-    DocumentSheetConfig.registerSheet(ActiveEffect, SYSTEM_ID, sheets.OHActiveEffectConfig, { makeDefault: true });
+    DocumentSheetConfig.registerSheet(ActiveEffect, SYSTEM.ID, sheets.OHActiveEffectConfig, { makeDefault: true });
 
     // Combat
     CONFIG.Combat.documentClass = documents.OHCombat;
@@ -101,10 +101,37 @@ Hooks.once("ready", function () {
     console.log("Outer Heaven | Activated Macro Drag&Drop");
 });
 
-Hooks.on("renderChatLog", (app, html, data) => {
-    html.on("click", "button.apply-damage", (event) => {
+Hooks.on("renderChatLog", (_app, html, _data) => {
+    html.on("click", ".outerheaven button.apply", (event) => {
         const message = game.messages.get(event.currentTarget.closest(".message").dataset.messageId);
-        const targetId = event.currentTarget.dataset.targetId;
-        message.action.applyTargetDamage(targetId);
+        /** @type {actions.OuterHeavenAction} */
+        const messageAction = message.action;
+        const applyAction = event.currentTarget.dataset.action;
+
+        switch (applyAction) {
+            case "damage": {
+                const targetId = event.currentTarget.dataset.targetId;
+                return messageAction.applyTargetDamage(targetId);
+            }
+            case "effect": {
+                const effectId = event.currentTarget.dataset.effectId;
+                return messageAction.applyEffect(effectId);
+            }
+        }
     });
+
+    html.on("click", ".outerheaven .description", (event) => {
+        // Toggle expanded state
+        event.currentTarget.closest(".description").querySelector(".description-content").classList.toggle("expanded");
+    });
+});
+
+Hooks.on("renderChatMessage", (_message, html, _data) => {
+    const description = html[0].querySelector(".outerheaven .description");
+    if (description) {
+        const expandDescriptions = game.settings.get(SYSTEM.ID, "expandDescriptions");
+        if (expandDescriptions) {
+            description.querySelector(".description-content").classList.add("expanded");
+        }
+    }
 });

@@ -1,3 +1,5 @@
+import { SYSTEM } from "../const.mjs";
+
 /**
  * The base class for actions in the Outer Heaven system.
  *
@@ -84,7 +86,7 @@ export class OuterHeavenAction {
      */
     static fromMessage(message) {
         let actor, item, token;
-        const { actorId, itemId, tokenId, actionType } = message.flags.outerheaven;
+        const { actorId, itemId, tokenId, actionType, ...flags } = message.flags.outerheaven;
         const cls = outerheaven.config.ACTIONS[actionType];
         if (actorId) actor = fromUuidSync(actorId);
         if (itemId) item = fromUuidSync(itemId);
@@ -94,7 +96,23 @@ export class OuterHeavenAction {
             throw new Error(`Could not reconstruct action from message ${message.id}`);
         }
 
-        return cls.fromData({ actor, item, token });
+        return cls.fromData({ actor, item, token, rolls: message.rolls, ...flags });
+    }
+
+    /**
+     * Reconstruct an Action instance from the data used to construct it.
+     * The basic implementation of this method simply calls the constructor,
+     * but subclasses may override this method to provide a more specialised implementation.
+     *
+     * @param {object} data - The data used to construct the action
+     * @param {OHActor} data.actor - The actor using the action
+     * @param {OHItem} data.item - The item being used
+     * @param {TokenDocument} [data.token] - The specific token from which the action is triggered
+     */
+    static fromData({ actor, item, token, ...flags }) {
+        const action = new this({ actor, item, token });
+        action._messageFlags.outerheaven = { ...flags };
+        return action;
     }
 
     /**
@@ -200,6 +218,42 @@ export class OuterHeavenAction {
     }
 
     /**
+     * Add the on-use effects of this action's item to the render data.
+     *
+     * @protected
+     * @returns {void}
+     */
+    _addOnUseEffects() {
+        const effects = this.item.effects.filter((effect) => effect.system.type === "onUse");
+        if (!effects.length) return;
+
+        this._renderData.effects = [];
+        for (const effect of effects) {
+            this._renderData.effects.push({ name: effect.name, img: effect.img, id: effect.id });
+        }
+    }
+
+    /**
+     * Apply an on-use effect to the currently selected token(s).
+     *
+     * @param {string} effectId - The ID of the effect to apply
+     * @returns {Promise<void>}
+     */
+    async applyEffect(effectId) {
+        const effect = this.item.effects.get(effectId);
+        const effectUuid = effect.uuid;
+        const effectData = effect.toObject();
+        delete effectData.flags[SYSTEM.ID].type;
+        foundry.utils.setProperty(effectData, "flags.core.sourceId", effectUuid);
+
+        const targets = canvas.tokens.controlled.map((token) => token.actor);
+        for (const target of targets) {
+            if (target.effects.find((effect) => effect.flags.core?.sourceId === effectUuid)) continue;
+            ActiveEffect.implementation.create(effectData, { parent: target });
+        }
+    }
+
+    /**
      * Create a chat message for this action.
      *
      * @param {object} [options] - Options affecting the chat message, passed to {@link ChatMessage.create}
@@ -212,10 +266,19 @@ export class OuterHeavenAction {
     async toMessage({ rollMode, temporary = false, renderData = {}, chatData = {}, ...options } = {}) {
         rollMode ??= game.settings.get("core", "rollMode");
 
+        let description;
+        if (this.item.system.description) {
+            description = await TextEditor.enrichHTML(this.item.system.description, {
+                rollData: this.item.getRollData(),
+                relativeTo: this.actor,
+            });
+        }
+
         const content = await renderTemplate(this.constructor.TEMPLATE, {
             actor: this.actor,
             item: this.item,
             config: outerheaven.config,
+            description,
             ...this._renderData,
             ...renderData,
         });

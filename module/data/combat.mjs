@@ -1,4 +1,4 @@
-import { SYSTEM_ID } from "../const.mjs";
+import { SYSTEM } from "../const.mjs";
 import { CollectionField } from "./fields/collection.mjs";
 
 /**
@@ -57,7 +57,7 @@ export class Team extends foundry.abstract.DataModel {
      * @type {Combatant[]}
      */
     get combatants() {
-        return this.combat?.combatants.filter((c) => c.flags[SYSTEM_ID]?.team === this.id) ?? [];
+        return this.combat?.combatants.filter((c) => c.flags[SYSTEM.ID]?.team === this.id) ?? [];
     }
 
     /**

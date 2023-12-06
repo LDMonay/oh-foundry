@@ -1,6 +1,7 @@
 <section class="items abilities flexcol">
     <header class="item-list-header flexrow">
         <div class="name">{{localize label}}</div>
+        <div class="item-action"></div>
         <div class="actions">{{localize "OH.Actions"}}</div>
         <div class="uses">{{localize "OH.Uses"}}</div>
         <div class="max">{{localize "OH.Max"}}</div>
@@ -18,6 +19,10 @@
                     <img class="icon" src="{{item.img}}" title="{{item.name}}"/>
                     <span>{{item.name}}</span>
                 </div>
+
+                <a class="item-action" data-tooltip="OH.ActionTypes.Use" data-action="itemUse">
+                    <i class="fas fa-bolt"></i>
+                </a>
 
                 <div class="actions">{{ifThen item.system.actionsToUse item.system.actionsToUse ""}}</div>
 

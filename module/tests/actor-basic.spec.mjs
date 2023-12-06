@@ -1,4 +1,4 @@
-import { SYSTEM_ID } from "../const.mjs";
+import { SYSTEM } from "../const.mjs";
 import { createActor, createItems } from "./utils.mjs";
 
 /**
@@ -6,7 +6,7 @@ import { createActor, createItems } from "./utils.mjs";
  */
 export function registerBasicActorTests(quench) {
     quench.registerBatch(
-        `${SYSTEM_ID}.actor.basic`,
+        `${SYSTEM.ID}.actor.basic`,
         (context) => {
             const { describe, it, assert, expect, should, before, after } = context;
 

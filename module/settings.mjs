@@ -1,6 +1,6 @@
 import { ItemCompendiumConfig } from "./applications/item-compendiums.mjs";
 import { TeamsConfig } from "./applications/teams-config.mjs";
-import { SYSTEM_ID } from "./const.mjs";
+import { SYSTEM } from "./const.mjs";
 import { Team } from "./data/combat.mjs";
 import { ItemCompendiumSettings } from "./data/settings.mjs";
 
@@ -11,7 +11,7 @@ import { ItemCompendiumSettings } from "./data/settings.mjs";
  */
 export function registerSettings() {
     // Damage dice explosion
-    game.settings.register(SYSTEM_ID, "criticals", {
+    game.settings.register(SYSTEM.ID, "criticals", {
         name: "OH.Settings.Criticals.Name",
         hint: "OH.Settings.Criticals.Hint",
         scope: "world",
@@ -26,13 +26,13 @@ export function registerSettings() {
     });
 
     // Compendium buttons
-    game.settings.register(SYSTEM_ID, "itemCompendiums", {
+    game.settings.register(SYSTEM.ID, "itemCompendiums", {
         type: ItemCompendiumSettings,
         scope: "world",
         config: false,
         default: new ItemCompendiumSettings().toObject(),
     });
-    game.settings.registerMenu(SYSTEM_ID, "itemCompendiums", {
+    game.settings.registerMenu(SYSTEM.ID, "itemCompendiums", {
         name: "OH.Settings.ItemCompendiums.Name",
         label: "OH.Settings.ItemCompendiums.Label",
         hint: "OH.Settings.ItemCompendiums.Hint",
@@ -42,18 +42,28 @@ export function registerSettings() {
     });
 
     // Default teams
-    game.settings.register(SYSTEM_ID, "defaultTeams", {
+    game.settings.register(SYSTEM.ID, "defaultTeams", {
         scope: "world",
         config: false,
         type: (value) => value.map((team) => new Team(team)),
         default: [],
     });
-    game.settings.registerMenu(SYSTEM_ID, "teamsConfig", {
+    game.settings.registerMenu(SYSTEM.ID, "teamsConfig", {
         name: "OH.Settings.TeamsConfig.Name",
         label: "OH.Settings.TeamsConfig.Label",
         hint: "OH.Settings.TeamsConfig.Hint",
         icon: "fas fa-flag",
         type: TeamsConfig,
         restricted: true,
+    });
+
+    // Item descriptions in chat
+    game.settings.register(SYSTEM.ID, "expandDescriptions", {
+        name: "OH.Settings.ExpandDescriptions.Name",
+        hint: "OH.Settings.ExpandDescriptions.Hint",
+        scope: "client",
+        config: true,
+        type: Boolean,
+        default: false,
     });
 }

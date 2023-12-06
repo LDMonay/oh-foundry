@@ -1,0 +1,38 @@
+<div class="outerheaven item-use flexcol">
+    <header class="card-header flexrow">
+        <img src="{{item.img}}" title="{{item.name}}" height="32" width="32"/>
+        <h3 class="item-name">{{item.name}}</h3>
+    </header>
+
+    {{! Description}}
+    {{#if description}}
+        <div class="description content-box">
+            <header class="description-header">{{localize "OH.Description"}}</header>
+            <div class="description-content">{{{description}}}</div>
+        </div>
+    {{/if}}
+
+    {{! Usage Details}}
+    <div class="content-box flexcol">
+        <div class="capacity">{{localize "OH.Uses"}} {{item.system.capacity.value}} / {{item.system.capacity.max}}
+            {{#if noCapacity}}
+                <i class="fas fa-exclamation-triangle warning" data-tooltip="{{localize "OH.NoUses"}}"></i>
+            {{/if}}
+        </div>
+
+        {{#if power}}
+            <div class="power">
+                <span class="actor-power">{{localize "OH.Power"}} {{power.value}} / {{power.max}}</span>
+                {{#if power.warning}}
+                    <i class="fas fa-exclamation-triangle warning" data-tooltip="{{localize "OH.NoPower"}}"></i>
+                {{/if}}
+            </div>
+        {{/if}}
+
+    </div>
+
+    {{! On Use Effects}}
+    {{#if effects}}
+        {{~> "oh.on-use-effects"}}
+    {{/if}}
+</div>

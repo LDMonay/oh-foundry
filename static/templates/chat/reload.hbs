@@ -1,13 +1,15 @@
-<div class="outerheaven reload">
+<div class="outerheaven reload flexcol">
   <header class="card-header flexrow">
     <img src="{{item.img}}" title="{{item.name}}" height="32" width="32"/>
     <h3 class="item-name">{{item.name}}</h3>
   </header>
+
   <div class="reload-content content-box flexcol">
     <span class="reloaded-text">{{localize "OH.WeaponReloaded"}}</span>
     <span class="action-cost">{{localize "OH.ActionsToFire"}}: {{item.system.actionsToUse}}</span>
     <span class="ammo">{{localize "OH.Ammo"}} {{item.system.capacity.value}} / {{item.system.capacity.max}}</span>
   </div>
+
   <div class="properties content-box">
     <header class="properties-header">{{localize "OH.Properties"}}</header>
     <span class="properties-content">{{item.system.properties}}</span>

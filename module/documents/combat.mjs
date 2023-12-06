@@ -1,5 +1,5 @@
 import { TeamsConfig } from "../applications/teams-config.mjs";
-import { SYSTEM_ID } from "../const.mjs";
+import { SYSTEM } from "../const.mjs";
 import { CombatData, Team } from "../data/combat.mjs";
 import { generateId } from "../utils.mjs";
 
@@ -23,9 +23,9 @@ export class OHCombat extends Combat {
         await super._preCreate(data, options, user);
 
         // Add default teams if the combat is not created with any
-        if (!hasProperty(data, `flags.${SYSTEM_ID}.teams`)) {
+        if (!hasProperty(data, `flags.${SYSTEM.ID}.teams`)) {
             /** @type {object[]} */
-            const teamsData = game.settings.get(SYSTEM_ID, "defaultTeams").map((team) => team.toObject());
+            const teamsData = game.settings.get(SYSTEM.ID, "defaultTeams").map((team) => team.toObject());
             const teams = teamsData.reduce((teams, team, index) => {
                 teams.push({
                     ...team,
@@ -34,7 +34,7 @@ export class OHCombat extends Combat {
                 });
                 return teams;
             }, []);
-            this.updateSource({ [`flags.${SYSTEM_ID}.teams`]: teams });
+            this.updateSource({ [`flags.${SYSTEM.ID}.teams`]: teams });
         }
     }
 
@@ -42,12 +42,12 @@ export class OHCombat extends Combat {
     async _preUpdate(data, options, user) {
         await super._preUpdate(data, options, user);
 
-        if (foundry.utils.hasProperty(data, `flags.${SYSTEM_ID}`)) {
+        if (foundry.utils.hasProperty(data, `flags.${SYSTEM.ID}`)) {
             // Clean and validate `flags.outerheaven` before updating
             foundry.utils.setProperty(
                 data,
-                `flags.${SYSTEM_ID}`,
-                this.system.updateSource(data.flags[SYSTEM_ID], { dryRun: true }),
+                `flags.${SYSTEM.ID}`,
+                this.system.updateSource(data.flags[SYSTEM.ID], { dryRun: true }),
             );
         }
     }
@@ -56,7 +56,7 @@ export class OHCombat extends Combat {
     prepareBaseData() {
         super.prepareBaseData();
         // Initialize a pseudo-system space to enable DataModel validation
-        this.system = new CombatData(this.flags[SYSTEM_ID] ?? {}, { parent: this });
+        this.system = new CombatData(this.flags[SYSTEM.ID] ?? {}, { parent: this });
     }
 
     /** @override */
@@ -65,7 +65,7 @@ export class OHCombat extends Combat {
         super._onUpdate(data, options, userId);
 
         // Core only cares about combatants, but the system attaches the setup to teams instead
-        if (foundry.utils.hasProperty(data, `flags.${SYSTEM_ID}.teams`)) {
+        if (foundry.utils.hasProperty(data, `flags.${SYSTEM.ID}.teams`)) {
             const team = this.teamTurns.find((t) => t.sort === this.turn)?.id;
             this.setupTurns();
             const adjustedTurn = team ? this.system.teams.get(team).sort : undefined;
@@ -162,7 +162,7 @@ export class OHCombat extends Combat {
      */
     async resetDone(ids = [], options = { render: false, turnEvents: false }) {
         const combatants = ids.length ? this.combatants.filter((c) => ids.includes(c.id)) : this.combatants;
-        const updates = combatants.map((c) => ({ _id: c.id, [`flags.${SYSTEM_ID}.done`]: false }));
+        const updates = combatants.map((c) => ({ _id: c.id, [`flags.${SYSTEM.ID}.done`]: false }));
         return this.updateEmbeddedDocuments("Combatant", updates, options);
     }
 
