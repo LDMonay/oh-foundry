@@ -39,6 +39,10 @@
                 "Add": "Add Team",
                 "Remove": "Remove Team",
                 "NewTeam": "New Team"
+            },
+            "ExpandDescriptions": {
+                "Name": "Expand Descriptions in Chat",
+                "Hint": "If checked, item descriptions appear expanded by default in chat messages."
             }
         },
 
@@ -81,12 +85,18 @@
         "EffectType": "Effect Type",
         "EffectTypes": {
             "Stance": "Stance",
-            "Template": "Template",
+            "OnUse": "On Use",
             "Hint": "Types the system attaches special behavior to."
         },
 
         "Notifications": {
             "ItemMacroOnlyOwned": "Item macros can only be created for owned items."
+        },
+
+        "ActionTypes": {
+            "Use": "Use",
+            "Attack": "Attack",
+            "Reload": "Reload"
         },
 
         "Create": "Create",
@@ -105,12 +115,15 @@
         "Shots": "Shots",
         "Strikes": "Strikes",
         "Ammo": "Ammo",
-        "NoAmmo": "No Ammo",
+        "NoAmmo": "Not enough ammo",
         "Uses": "Uses",
+        "NoUses": "Not enough uses",
         "Actions": "Actions",
         "ActionsToFire": "Actions to fire",
         "Max": "Max",
+        "Power": "Power",
         "PowerCost": "Power Cost",
+        "NoPower": "Not enough power",
         "Attack": "Attack",
         "Reload": "Reload",
         "WeaponReloaded": "Weapon has been reloaded.",
@@ -121,6 +134,7 @@
         "Damage": "Damage",
         "Benefits": "Benefits",
         "Properties": "Properties",
+        "Description": "Description",
 
         "Defenses": "Defenses",
         "Armor": "Armor",

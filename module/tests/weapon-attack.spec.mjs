@@ -1,10 +1,10 @@
-import { SYSTEM_ID } from "../const.mjs";
+import { SYSTEM } from "../const.mjs";
 import { DamageRoll } from "../dice/damage-roll.mjs";
 
 /** @param {import("@ethaks/fvtt-quench/lib").Quench} quench */
 export function registerWeaponAttackTest(quench) {
     quench.registerBatch(
-        `${SYSTEM_ID}.weapon-attack`,
+        `${SYSTEM.ID}.weapon-attack`,
         (context) => {
             const { describe, it, assert, expect, should, before, after } = context;
 

@@ -41,7 +41,7 @@ OUTERHEAVEN.armorTypes = {
 
 OUTERHEAVEN.effectTypes = {
     stance: "OH.EffectTypes.Stance",
-    template: "OH.EffectTypes.Template",
+    onUse: "OH.EffectTypes.OnUse",
 };
 
 OUTERHEAVEN.ACTIONS = {};

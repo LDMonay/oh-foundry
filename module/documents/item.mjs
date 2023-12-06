@@ -1,4 +1,5 @@
-import { SYSTEM_ID } from "../const.mjs";
+import { OUTERHEAVEN } from "../config.mjs";
+import { SYSTEM } from "../const.mjs";
 
 export class OHItem extends Item {
     static displayTemplate = {
@@ -24,15 +25,25 @@ export class OHItem extends Item {
         }
 
         // Create the macro command using the uuid.
-        const command = `fromUuidSync("${item.uuid}").use()`;
-        let macro = game.macros.find((m) => m.name === item.name && m.command === command);
+        const action = data.action ?? "";
+        const actionCls = OUTERHEAVEN.ACTIONS[action];
+        let name = `${item.name}`;
+        if (actionCls) name += ` (${game.i18n.localize(actionCls.LABEL)})`;
+
+        const command = `fromUuidSync("${item.uuid}").use({ action: "${action}" })`;
+        let macro = game.macros.find((m) => m.name === name && m.command === command);
         if (!macro) {
             macro = await Macro.create({
-                name: item.name,
+                name: name,
                 type: "script",
                 img: item.img,
                 command: command,
-                flags: { [`${SYSTEM_ID}.itemMacro`]: true },
+                flags: {
+                    [`${SYSTEM.ID}`]: {
+                        itemMacro: true,
+                        action: action,
+                    },
+                },
             });
         }
         return game.user.assignHotbarMacro(macro, slot);
@@ -89,9 +100,27 @@ export class OHItem extends Item {
      * @returns {Promise<ChatMessage>} - The created chat message, if any.
      */
     async use(options = {}) {
-        const { token, ...otherOptions } = options;
-        if (this.type === "weapon")
-            return outerheaven.config.ACTIONS.attack.use({ actor: this.actor, ...otherOptions, item: this });
+        const { action, token, ...otherOptions } = options;
+
+        // Determine action through options, or default to a sensible action for the item type.
+        let actionClass;
+        if (action) actionClass = OUTERHEAVEN.ACTIONS[action];
+        else {
+            switch (this.type) {
+                case "weapon":
+                    actionClass = OUTERHEAVEN.ACTIONS.attack;
+                    break;
+
+                case "ability":
+                case "equipment":
+                    actionClass = OUTERHEAVEN.ACTIONS.itemUse;
+                    break;
+            }
+        }
+
+        if (!actionClass) throw new Error(`Unknown action type: ${action}`);
+
+        return actionClass.use({ actor: this.actor, token, ...otherOptions, item: this });
     }
 
     /**

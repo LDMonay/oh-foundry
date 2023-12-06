@@ -1,0 +1,14 @@
+<div class="content-box effects">
+    <header class="effects-header"><h4>{{localize "OH.Effects"}}</h4></header>
+    <ul class="effect-list">
+        {{#each effects as |effect| }}
+            <li class="flexrow effect" data-effect-id="{{effect.id}}">
+                <img src="{{effect.img}}" class="icon" title="{{effect.name}}">
+                <span class="name">{{effect.name}}</span>
+                <button class="apply apply-effect" data-tooltip="OH.ApplyEffect" data-action="effect" data-effect-id="{{effect.id}}">
+                    <i class="fas fa-check"></i>
+                </button>
+            </li>
+        {{/each}}
+    </ul>
+</div>

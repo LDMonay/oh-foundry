@@ -1,4 +1,4 @@
-import { SYSTEM_ID } from "../const.mjs";
+import { SYSTEM } from "../const.mjs";
 import { createActor, createEffects, createItems, updateSource } from "./utils.mjs";
 
 /**
@@ -6,7 +6,7 @@ import { createActor, createEffects, createItems, updateSource } from "./utils.m
  */
 export function registerActiveEffectTests(quench) {
     quench.registerBatch(
-        `${SYSTEM_ID}.active-effects.basic`,
+        `${SYSTEM.ID}.active-effects.basic`,
         (context) => {
             const { describe, it, assert, expect, should, before, after } = context;
 
@@ -25,19 +25,19 @@ export function registerActiveEffectTests(quench) {
                     expect(ae.system.type).to.equal("stance");
                 });
 
-                it("should accept template type", function () {
+                it("should accept onUse type", function () {
                     const ae = new ActiveEffect.implementation({
                         name: "Test Effect",
-                        flags: { outerheaven: { type: "template" } },
+                        flags: { outerheaven: { type: "onUse" } },
                     });
                     expect(ae).to.be.an.instanceof(ActiveEffect);
-                    expect(ae.system.type).to.equal("template");
+                    expect(ae.system.type).to.equal("onUse");
                 });
 
-                it("should not transfer template type effects", function () {
+                it("should not transfer onUse type effects", function () {
                     const actor = createActor();
                     const [item] = createItems([{ name: "AE Test Armor" }], { parent: actor });
-                    const [effect] = createEffects([{ name: "AE Test Effect", system: { type: "template" } }], {
+                    const [effect] = createEffects([{ name: "AE Test Effect", system: { type: "onUse" } }], {
                         parent: item,
                     });
 

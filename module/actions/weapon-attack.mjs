@@ -6,24 +6,16 @@ import { OuterHeavenAction } from "./action.mjs";
 export class AttackAction extends OuterHeavenAction {
     static ACTION_TYPE = "attack";
     static TEMPLATE = "systems/outerheaven/templates/chat/weapon-attack.hbs";
+    static LABEL = "OH.ActionTypes.Attack";
 
     /** @override */
-    static fromMessage(message) {
-        let actor, item;
-        const { itemId, results } = message.flags.outerheaven ?? {};
+    static fromData({ actor, item, token, rolls, ...flags } = {}) {
+        const action = super.fromData({ actor, item, token, ...flags });
 
-        if (itemId) {
-            item = fromUuidSync(itemId);
-            actor = item.actor;
-        }
-
-        const action = new this({ actor, item });
-
-        action.attackRoll = message.rolls[0];
-        action.damageRoll = message.rolls[1];
-        action.results = new foundry.utils.Collection(results.map((result) => [result._id, result]));
-        action.targets = results.map((result) => fromUuidSync(result._id));
-        action._messageFlags = message.flags;
+        action.attackRoll = rolls[0];
+        action.damageRoll = rolls[1];
+        action.results = new foundry.utils.Collection(flags.results.map((result) => [result._id, result]));
+        action.targets = flags.results.map((result) => fromUuidSync(result._id));
 
         return action;
     }
@@ -67,6 +59,8 @@ export class AttackAction extends OuterHeavenAction {
         if (this.item.system.capacity.value > 0) {
             this.itemUpdate["system.capacity.value"] = this.item.system.capacity.value - 1;
         }
+
+        if (this.item.effects) this._addOnUseEffects();
     }
 
     /**

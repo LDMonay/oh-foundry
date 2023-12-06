@@ -1,5 +1,5 @@
 import { TeamsConfig } from "../applications/teams-config.mjs";
-import { SYSTEM_ID } from "../const.mjs";
+import { SYSTEM } from "../const.mjs";
 
 export class OHCombatTracker extends CombatTracker {
     /** @override */
@@ -11,7 +11,7 @@ export class OHCombatTracker extends CombatTracker {
 
     /** @override */
     get template() {
-        return `systems/${SYSTEM_ID}/templates/sheets/combat-tracker.hbs`;
+        return `systems/${SYSTEM.ID}/templates/sheets/combat-tracker.hbs`;
     }
 
     /** @override */
@@ -114,9 +114,9 @@ export class OHCombatTracker extends CombatTracker {
                 const teamId = teamLi?.dataset.teamId;
                 const team = combat.system.teams.get(teamId);
                 if (team) {
-                    combatant.update({ [`flags.${SYSTEM_ID}.team`]: teamId });
+                    combatant.update({ [`flags.${SYSTEM.ID}.team`]: teamId });
                 } else {
-                    combatant.update({ [`flags.${SYSTEM_ID}.team`]: "" });
+                    combatant.update({ [`flags.${SYSTEM.ID}.team`]: "" });
                 }
                 break;
             }
@@ -146,7 +146,7 @@ export class OHCombatTracker extends CombatTracker {
         sorted.splice(targetIndex, 0, source);
 
         const sortedTeamData = sorted.map((team, index) => ({ ...team.toObject(), sort: index + 1 }));
-        return this.viewed.update({ [`flags.${SYSTEM_ID}.teams`]: sortedTeamData });
+        return this.viewed.update({ [`flags.${SYSTEM.ID}.teams`]: sortedTeamData });
     }
 
     /** @override */

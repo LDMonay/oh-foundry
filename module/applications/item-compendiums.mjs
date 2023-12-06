@@ -1,4 +1,4 @@
-import { SYSTEM_ID } from "../const.mjs";
+import { SYSTEM } from "../const.mjs";
 import { ItemCompendiumSettings } from "../data/settings.mjs";
 
 /**
@@ -6,7 +6,7 @@ import { ItemCompendiumSettings } from "../data/settings.mjs";
  */
 export class ItemCompendiumConfig extends FormApplication {
     constructor(object, options) {
-        super(object || game.settings.get(SYSTEM_ID, "itemCompendiums"), options);
+        super(object || game.settings.get(SYSTEM.ID, "itemCompendiums"), options);
     }
 
     /** @override */
@@ -14,10 +14,10 @@ export class ItemCompendiumConfig extends FormApplication {
         const options = super.defaultOptions;
         return {
             ...options,
-            id: `${SYSTEM_ID}-item-compendiums`,
+            id: `${SYSTEM.ID}-item-compendiums`,
             title: game.i18n.localize("OH.Settings.ItemCompendiums.Name"),
-            classes: [...options.classes, SYSTEM_ID, "item-compendiums"],
-            template: `systems/${SYSTEM_ID}/templates/applications/item-compendiums.hbs`,
+            classes: [...options.classes, SYSTEM.ID, "item-compendiums"],
+            template: `systems/${SYSTEM.ID}/templates/applications/item-compendiums.hbs`,
             width: 600,
             height: "auto",
             closeOnSubmit: true,
@@ -48,7 +48,7 @@ export class ItemCompendiumConfig extends FormApplication {
 
     /** @override */
     _updateObject(_event, formData) {
-        return game.settings.set(SYSTEM_ID, "itemCompendiums", formData);
+        return game.settings.set(SYSTEM.ID, "itemCompendiums", formData);
     }
 
     /** @override */

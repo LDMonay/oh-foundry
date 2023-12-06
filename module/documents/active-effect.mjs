@@ -44,8 +44,8 @@ export class OHActiveEffect extends ActiveEffect {
 
     /** @override */
     prepareDerivedData() {
-        // Never transfer "template" type effects that are meant to be applied to _other_ actors
-        if (this.system.type === "template") this.transfer = false;
+        // Never transfer "onUse" type effects that are meant to be applied to _other_ actors
+        if (this.system.type === "onUse") this.transfer = false;
     }
 
     /**

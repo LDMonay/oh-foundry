@@ -1,4 +1,4 @@
-import { SYSTEM_ID } from "../const.mjs";
+import { SYSTEM } from "../const.mjs";
 import { Team } from "../data/combat.mjs";
 import { generateId } from "../utils.mjs";
 
@@ -15,7 +15,7 @@ export class TeamsConfig extends FormApplication {
         /** @type {object[]} */
         const rawTeams = combat
             ? combat.system.toObject().teams
-            : game.settings.get(SYSTEM_ID, "defaultTeams").map((team) => team.toObject());
+            : game.settings.get(SYSTEM.ID, "defaultTeams").map((team) => team.toObject());
         const teams = rawTeams.map((team) => new Team(team, { parent: combat }));
         super(teams, options);
         this.combat = combat;
@@ -26,9 +26,9 @@ export class TeamsConfig extends FormApplication {
         const options = super.defaultOptions;
         return {
             ...options,
-            id: `${SYSTEM_ID}-teams-config`,
-            classes: [...options.classes, SYSTEM_ID, "teams-config"],
-            template: `systems/${SYSTEM_ID}/templates/applications/teams-config.hbs`,
+            id: `${SYSTEM.ID}-teams-config`,
+            classes: [...options.classes, SYSTEM.ID, "teams-config"],
+            template: `systems/${SYSTEM.ID}/templates/applications/teams-config.hbs`,
             tabs: [{ navSelector: ".tabs", contentSelector: ".content" }],
             dragDrop: [{ dragSelector: ".team", dropSelector: ".tabs" }],
             width: 600,
@@ -133,10 +133,10 @@ export class TeamsConfig extends FormApplication {
         const teams = this.object.map((team) => team.toObject());
 
         if (this.combat) {
-            await this.combat.update({ [`flags.${SYSTEM_ID}.teams`]: teams });
+            await this.combat.update({ [`flags.${SYSTEM.ID}.teams`]: teams });
             this.combat.render();
         } else {
-            await game.settings.set(SYSTEM_ID, "defaultTeams", teams);
+            await game.settings.set(SYSTEM.ID, "defaultTeams", teams);
         }
 
         this.close();

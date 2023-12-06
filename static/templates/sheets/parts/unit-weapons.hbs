@@ -25,7 +25,7 @@
 
         {{!-- Use link for weapon attacks --}}
         <div class="use">
-          <a class="use-weapon" data-tooltip="OH.Attack">
+          <a class="item-action" data-tooltip="OH.Attack" data-action="attack">
             {{#if (eq item.system.weaponType "ranged")}}<i class="fas fa-gun"></i>{{/if}}
             {{#if (eq item.system.weaponType "melee")}}<i class="fas fa-sword"></i>{{/if}}
           </a>
@@ -45,7 +45,7 @@
         <div class="ammo flexrow">
           <div class="reload">
             {{#if item.document.canReload}}
-              <a data-tooltip="OH.Reload"><img class="icon" src="systems/outerheaven/icons/machine-gun-magazine.svg"></i></a>
+              <a class="item-action" data-tooltip="OH.Reload" data-action="reload"><img class="icon" src="systems/outerheaven/icons/machine-gun-magazine.svg"></i></a>
             {{/if}}
           </div>
           <input type="number" value={{item.document.system.capacity.value}} step="1" min="0" max="{{item.system.capacity.max}}" data-field="system.capacity.value" class="inline-edit"/>

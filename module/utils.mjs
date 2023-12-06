@@ -1,3 +1,5 @@
+import { SYSTEM } from "./const.mjs";
+
 /**
  * Request all template partials from the server and cache them for later use.
  * Partials are available by their paths as well as through `oh.${partialName}`.
@@ -6,22 +8,23 @@
  */
 export async function preloadHandlebarsTemplates() {
     const partials = [
-        "systems/outerheaven/templates/sheets/parts/melee-block.hbs",
-        "systems/outerheaven/templates/sheets/parts/ranged-block.hbs",
-        "systems/outerheaven/templates/sheets/parts/unit-abilities.hbs",
-        "systems/outerheaven/templates/sheets/parts/unit-defenses.hbs",
-        "systems/outerheaven/templates/sheets/parts/unit-items.hbs",
-        "systems/outerheaven/templates/sheets/parts/unit-skills.hbs",
-        "systems/outerheaven/templates/sheets/parts/unit-stats-sidebar.hbs",
-        "systems/outerheaven/templates/sheets/parts/unit-stats-defense.hbs",
-        "systems/outerheaven/templates/sheets/parts/unit-weapons.hbs",
-        "systems/outerheaven/templates/sheets/parts/item-effects.hbs",
-        "systems/outerheaven/templates/chat/item-display.hbs",
-        "systems/outerheaven/templates/chat/defense-display.hbs",
-        "systems/outerheaven/templates/chat/defense-stats-display.hbs",
-        "systems/outerheaven/templates/chat/weapon-display.hbs",
-        "systems/outerheaven/templates/chat/weapon-attack.hbs",
-    ];
+        "sheets/parts/melee-block.hbs",
+        "sheets/parts/ranged-block.hbs",
+        "sheets/parts/unit-abilities.hbs",
+        "sheets/parts/unit-defenses.hbs",
+        "sheets/parts/unit-items.hbs",
+        "sheets/parts/unit-skills.hbs",
+        "sheets/parts/unit-stats-sidebar.hbs",
+        "sheets/parts/unit-stats-defense.hbs",
+        "sheets/parts/unit-weapons.hbs",
+        "sheets/parts/item-effects.hbs",
+        "chat/item-display.hbs",
+        "chat/defense-display.hbs",
+        "chat/defense-stats-display.hbs",
+        "chat/weapon-display.hbs",
+        "chat/weapon-attack.hbs",
+        "chat/parts/on-use-effects.hbs",
+    ].map((path) => `${SYSTEM.TEMPLATE_PATH}/${path}`);
 
     const paths = {};
     for (const path of partials) {
