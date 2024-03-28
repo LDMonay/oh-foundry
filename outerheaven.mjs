@@ -135,3 +135,20 @@ Hooks.on("renderChatMessage", (_message, html, _data) => {
         }
     }
 });
+
+// Add a toggle done button to the token HUD
+Hooks.on("renderTokenHUD", (hud, html, _data) => {
+    html = html[0];
+    if (!hud.object.combatant) return;
+    const isDone = hud.object.combatant.system?.done ?? false;
+    const toggleDoneButton = document.createElement("div");
+    toggleDoneButton.classList.add("control-icon", "toggle-done", SYSTEM.ID);
+    if (isDone) toggleDoneButton.classList.add("active");
+    toggleDoneButton.dataset.tooltip = "OH.Combat.Done";
+    toggleDoneButton.innerHTML = `<i class="fas fa-check"></i>`;
+    toggleDoneButton.addEventListener("click", async () => {
+        await hud.object.combatant.toggleDone();
+        hud.render();
+    });
+    html.querySelector(".col.right").insertAdjacentElement("beforeend", toggleDoneButton);
+});
