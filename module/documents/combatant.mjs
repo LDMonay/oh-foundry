@@ -43,7 +43,14 @@ export class OHCombatant extends Combatant {
         }
     }
 
+    /**
+     * Toggle the `Done` state of the combatant.
+     *
+     * @param {boolean | null} [state=null] - The target state to set. If `null`, the state is toggled.
+     * @returns {Promise<Combatant>}
+     */
     async toggleDone(state = null) {
+        if (!this.combat.team?.combatants.includes(this)) return this;
         const targetState = state !== null ? state : !this.system.done;
         return this.update({ [`flags.${SYSTEM.ID}.done`]: targetState });
     }
