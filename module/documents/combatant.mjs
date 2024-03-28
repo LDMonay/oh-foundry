@@ -20,7 +20,7 @@ export class OHCombatant extends Combatant {
         super._onUpdate(data, options, userId);
 
         // Also redraw effects when the combatant is marked as done
-        if ("done" in data.flags[SYSTEM.ID]) {
+        if (foundry.utils.hasProperty(data, `flags.${SYSTEM.ID}.done`)) {
             this.token?.object?.drawEffects();
         }
     }
