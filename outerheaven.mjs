@@ -6,6 +6,7 @@ import "./module/hmr.mjs";
 import { OUTERHEAVEN } from "./module/config.mjs";
 import * as actions from "./module/actions/_module.mjs";
 import * as applications from "./module/applications/_module.mjs";
+import * as canvas from "./module/canvas/_module.mjs";
 import * as dataModels from "./module/data/_module.mjs";
 import * as dice from "./module/dice/_module.mjs";
 import * as documents from "./module/documents/_module.mjs";
@@ -74,6 +75,9 @@ Hooks.once("init", function () {
     // Chat
     CONFIG.ChatMessage.documentClass = documents.OHChatMessage;
 
+    // Token
+    CONFIG.Token.objectClass = canvas.OHToken;
+
     registerSettings();
     utils.preloadHandlebarsTemplates();
 
@@ -126,6 +130,7 @@ Hooks.on("renderChatLog", (_app, html, _data) => {
     });
 });
 
+// Conditionally expand item descriptions in chat messages according to user setting
 Hooks.on("renderChatMessage", (_message, html, _data) => {
     const description = html[0].querySelector(".outerheaven .description");
     if (description) {

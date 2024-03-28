@@ -16,6 +16,16 @@ export class OHCombatant extends Combatant {
     }
 
     /** @override */
+    _onUpdate(data, options, userId) {
+        super._onUpdate(data, options, userId);
+
+        // Also redraw effects when the combatant is marked as done
+        if ("done" in data.flags[SYSTEM.ID]) {
+            this.token?.object?.drawEffects();
+        }
+    }
+
+    /** @override */
     prepareBaseData() {
         super.prepareBaseData();
         this.system = new CombatantData(this.flags[SYSTEM.ID] ?? {}, { parent: this });
