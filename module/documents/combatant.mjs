@@ -16,6 +16,16 @@ export class OHCombatant extends Combatant {
     }
 
     /** @override */
+    _onUpdate(data, options, userId) {
+        super._onUpdate(data, options, userId);
+
+        // Also redraw effects when the combatant is marked as done
+        if (foundry.utils.hasProperty(data, `flags.${SYSTEM.ID}.done`)) {
+            this.token?.object?.drawEffects();
+        }
+    }
+
+    /** @override */
     prepareBaseData() {
         super.prepareBaseData();
         this.system = new CombatantData(this.flags[SYSTEM.ID] ?? {}, { parent: this });
@@ -33,7 +43,14 @@ export class OHCombatant extends Combatant {
         }
     }
 
+    /**
+     * Toggle the `Done` state of the combatant.
+     *
+     * @param {boolean | null} [state=null] - The target state to set. If `null`, the state is toggled.
+     * @returns {Promise<Combatant>}
+     */
     async toggleDone(state = null) {
+        if (!this.combat.team?.combatants.includes(this)) return this;
         const targetState = state !== null ? state : !this.system.done;
         return this.update({ [`flags.${SYSTEM.ID}.done`]: targetState });
     }
