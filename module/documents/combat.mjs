@@ -66,6 +66,7 @@ export class OHCombat extends Combat {
 
         // Core only cares about combatants, but the system attaches the setup to teams instead
         if (foundry.utils.hasProperty(data, `flags.${SYSTEM.ID}.teams`)) {
+            if (!this.teamTurns) this.teamTurns = this.system.teams.contents.sort((a, b) => a.sort - b.sort);
             const team = this.teamTurns.find((t) => t.sort === this.turn)?.id;
             this.setupTurns();
             const adjustedTurn = team ? this.system.teams.get(team).sort : undefined;
@@ -172,11 +173,14 @@ export class OHCombat extends Combat {
         const result = super.setupTurns();
 
         /** @type {Team[]} */
-        const teamTurns = (this.teamTurns = this.system.teams.contents.sort((a, b) => a.sort - b.sort));
-        if (this.turn !== null) this.turn = Math.clamped(this.turn, 1, teamTurns.length);
+        const teamTurns = this.system.teams.contents.sort((a, b) => a.sort - b.sort);
+        this.teamTurns = teamTurns;
 
-        const currentTeam = teamTurns[this.turn];
-        this.current.team = currentTeam;
+        if (this.turn !== null) {
+            this.turn = Math.clamped(this.turn, 1, teamTurns.length);
+        }
+
+        this.current.team = teamTurns[this.turn];
 
         return result;
     }
