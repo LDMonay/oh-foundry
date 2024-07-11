@@ -92,6 +92,7 @@ export class OHCombat extends Combat {
     /** @override */
     async startCombat() {
         this._playCombatSound("startEncounter");
+        if (!this.teamTurns) this.teamTurns = this.system.teams.contents.sort((a, b) => a.sort - b.sort);
         const updateData = { round: 1, turn: this.teamTurns[0].sort };
         Hooks.callAll("combatStart", this, updateData);
         return this.update(updateData);
@@ -170,8 +171,9 @@ export class OHCombat extends Combat {
     /** @override */
     setupTurns() {
         // Run default setup to keep core API TODO: Check whether actually useful
+        const preTurn = this.turn;
         const result = super.setupTurns();
-
+        this.turn = preTurn;
         /** @type {Team[]} */
         const teamTurns = this.system.teams.contents.sort((a, b) => a.sort - b.sort);
         this.teamTurns = teamTurns;
@@ -179,9 +181,7 @@ export class OHCombat extends Combat {
         if (this.turn !== null) {
             this.turn = Math.clamped(this.turn, 1, teamTurns.length);
         }
-
         this.current.team = teamTurns[this.turn];
-
         return result;
     }
 
