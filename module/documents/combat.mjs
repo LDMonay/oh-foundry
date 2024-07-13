@@ -66,6 +66,7 @@ export class OHCombat extends Combat {
 
         // Core only cares about combatants, but the system attaches the setup to teams instead
         if (foundry.utils.hasProperty(data, `flags.${SYSTEM.ID}.teams`)) {
+            if (!this.teamTurns) this.teamTurns = this.system.teams.contents.sort((a, b) => a.sort - b.sort);
             const team = this.teamTurns.find((t) => t.sort === this.turn)?.id;
             this.setupTurns();
             const adjustedTurn = team ? this.system.teams.get(team).sort : undefined;
@@ -91,6 +92,7 @@ export class OHCombat extends Combat {
     /** @override */
     async startCombat() {
         this._playCombatSound("startEncounter");
+        if (!this.teamTurns) this.teamTurns = this.system.teams.contents.sort((a, b) => a.sort - b.sort);
         const updateData = { round: 1, turn: this.teamTurns[0].sort };
         Hooks.callAll("combatStart", this, updateData);
         return this.update(updateData);
@@ -121,6 +123,12 @@ export class OHCombat extends Combat {
         Hooks.callAll("combatTurn", this, updateData, updateOptions);
         await this.resetDone();
         return this.update(updateData, updateOptions);
+    }
+
+    /** @override */
+    async previousTurn() {
+        await this.resetDone();
+        return await super.previousTurn();
     }
 
     /**
@@ -169,15 +177,17 @@ export class OHCombat extends Combat {
     /** @override */
     setupTurns() {
         // Run default setup to keep core API TODO: Check whether actually useful
+        const preTurn = this.turn;
         const result = super.setupTurns();
-
+        this.turn = preTurn;
         /** @type {Team[]} */
-        const teamTurns = (this.teamTurns = this.system.teams.contents.sort((a, b) => a.sort - b.sort));
-        if (this.turn !== null) this.turn = Math.clamped(this.turn, 1, teamTurns.length);
+        const teamTurns = this.system.teams.contents.sort((a, b) => a.sort - b.sort);
+        this.teamTurns = teamTurns;
 
-        const currentTeam = teamTurns[this.turn];
-        this.current.team = currentTeam;
-
+        if (this.turn !== null) {
+            this.turn = Math.clamped(this.turn, 1, teamTurns.length);
+        }
+        this.current.team = teamTurns[this.turn];
         return result;
     }
 
