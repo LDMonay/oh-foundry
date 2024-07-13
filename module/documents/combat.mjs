@@ -125,6 +125,12 @@ export class OHCombat extends Combat {
         return this.update(updateData, updateOptions);
     }
 
+    /** @override */
+    async previousTurn() {
+        await this.resetDone();
+        return await super.previousTurn();
+    }
+
     /**
      * Advance the combat to the next round.
      * This overrides the core implementation to use teams instead of combatants.

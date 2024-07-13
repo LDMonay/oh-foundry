@@ -26,7 +26,7 @@
     "download": "https://github.com/LDMonay/oh-foundry/releases/download/v0.01/system.zip",
     "flags": {
         "hotReload": {
-            "extensions": ["hbs", "json", "mjs", "js", "map"]
+            "extensions": ["hbs", "json", "js"]
         }
     }
 }
